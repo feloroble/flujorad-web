@@ -7,5 +7,8 @@ def create_app():
 
     from app.views.main import main_bp
     app.register_blueprint(main_bp)
+    
+    from app.views.auth import auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
