@@ -1,7 +1,8 @@
-from peewee import CharField, BooleanField
-from .base import BaseModel  # Usa BaseModel explícitamente
+from app.extensions import db
 
-class Usuario(BaseModel):
-    nombre = CharField(max_length=50)
-    email = CharField(unique=True)
-    activo = BooleanField(default=True)
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)

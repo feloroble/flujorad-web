@@ -1,40 +1,26 @@
+import os
 from flask import Flask
-from config import Config
-from database import db
 
-
-
-
+from .extensions import db ,migrate
+from .models import register_models  # carga dinámica
+from .routes import register_routes
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(Config)
 
-   # Configurar MariaDB con Peewee
-    
+    # Configuración
+    app.config.from_object('app.config.DevelopmentConfig')
 
-    
-    # Manejar apertura/cierre de conexiones en cada request (Flask)
-    @app.before_request
-    def before_request():
-        db.connect(reuse_if_open=True)  # Reusa conexiones existentes
+    # Inicializar extensiones
+    db.init_app(app)
+    migrate.init_app(app, db)  # <- IMPORTANTE
 
-    @app.teardown_request
-    def teardown_request(exception):
-        if not db.is_closed():
-            db.close()
+    # Registrar modelos automáticamente
+    with app.app_context():
+        register_models()
+        db.create_all() # Crea las tablas en la base de datos
 
-   
-
-    from.models import Usuario  # Importar modelos para que Peewee los registre
-    db.bind([Usuario])
-
-
-
-    from app.views.main import main_bp
-    app.register_blueprint(main_bp)
-    
-    from app.views.auth import auth_bp
-    app.register_blueprint(auth_bp)
+    # Registrar rutas
+    register_routes(app)
 
     return app
