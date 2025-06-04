@@ -3,14 +3,31 @@
 {% block title %} REGISTRO {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>Registro</h2>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.name.label }} {{ form.name(size=32) }}<br>
-    {{ form.email.label }} {{ form.email(size=32) }}<br>
-    {{ form.password.label }} {{ form.password(size=32) }}<br>
-    {{ form.submit() }}
-  </form>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+    <h3 class="text-center text-primary mb-4">Crear una cuenta</h3>
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+      
+      <div class="mb-3">
+        {{ form.name.label(class="form-label text-primary") }}
+        {{ form.name(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.email.label(class="form-label text-primary") }}
+        {{ form.email(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.password.label(class="form-label text-primary") }}
+        {{ form.password(class="form-control") }}
+      </div>
+
+      <div class="d-grid">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

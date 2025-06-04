@@ -1,52 +1,39 @@
-{% extends "base.html" %}
-
-{% block title %} INICIO {% endblock %}
-
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
 {% block content %}
-<section class="py-5 bg-light">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="fw-bold mb-4">Acerca de Nosotros</h2>
-          <p class="lead text-muted">
-            Somos un equipo apasionado por crear soluciones innovadoras.
-          </p>
-        </div>
-      </div>
-
-      <!-- Cards con información -->
-      <div class="row mt-5">
-        <div class="col-md-4 mb-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <i class="bi bi-people-fill fs-1 text-primary mb-3"></i>
-              <h5 class="card-title">Nuestra Misión</h5>
-              <p class="card-text">Brindar productos de calidad que mejoren la vida de las personas.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <i class="bi bi-lightbulb-fill fs-1 text-warning mb-3"></i>
-              <h5 class="card-title">Visión</h5>
-              <p class="card-text">Ser líderes en innovación en nuestro sector.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-              <i class="bi bi-heart-fill fs-1 text-danger mb-3"></i>
-              <h5 class="card-title">Valores</h5>
-              <p class="card-text">Integridad, creatividad y compromiso con nuestros clientes.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+<div id="carouselExampleIndicators" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ url_for('static', filename='img/banner1.jpg') }}" class="d-block w-100" alt="...">
     </div>
-  </section>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='img/banner2.jpg') }}" class="d-block w-100" alt="...">
+    </div>
+  </div>
+</div>
 
+<section id="presentacion" class="mb-5">
+  <h2>Presentación</h2>
+  <p>Soy Félix Rodríguez Roble, fundador de Tecno T@ctil. Administrador de redes, ingeniero eléctrico y experto en túneles de ventas. Ayudo a profesionales y empresas a automatizar y escalar sus procesos digitales de forma segura, funcional y humana.</p>
+</section>
 
+<section id="mision" class="mb-5">
+  <h2>Misión</h2>
+  <p>Brindar soluciones tecnológicas integrales, seguras y personalizadas que empoderen a individuos y organizaciones a través del uso eficaz de la tecnología.</p>
+</section>
 
+<section id="vision" class="mb-5">
+  <h2>Visión</h2>
+  <p>Ser un referente en innovación tecnológica personalizada en el mundo hispano, fusionando lo humano con lo digital.</p>
+</section>
+
+<section id="servicios" class="mb-5">
+  <h2>Servicios</h2>
+  <ul>
+    <li>Consultoría en redes</li>
+    <li>Automatización de ventas</li>
+    <li>Soporte en infraestructura eléctrica</li>
+    <li>Asesoría en tecnología aplicada</li>
+  </ul>
+</section>
 {% endblock %}
