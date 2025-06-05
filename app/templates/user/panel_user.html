@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Usuario {% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center text-primary mb-4">Bienvenido, {{ current_user.name }}</h2>
+
+  <!-- ===============================
+       SECCIÓN 1: DATOS PERSONALES
+  ================================== -->
+  <section id="datos-personales" class="mb-5">
+    <div class="card shadow rounded-4">
+      <div class="card-header bg-primary text-white text-center">
+        <h5 class="mb-0">Tus Datos Personales</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <strong>Nombre completo:</strong> {{ current_user.name }}
+          </li>
+          <li class="list-group-item">
+            <strong>Correo electrónico:</strong> {{ current_user.email }}
+          </li>
+          <li class="list-group-item">
+            <strong>Rol:</strong> Usuario Normal
+          </li>
+          {% if current_user.phone %}
+          <li class="list-group-item">
+            <strong>Teléfono:</strong> {{ current_user.phone }}
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================
+       SECCIÓN 2: CONFIGURACIÓN (placeholder)
+  ================================== -->
+  <section id="configuracion" class="mb-5">
+    <div class="card shadow rounded-4">
+      <div class="card-header bg-info text-white text-center">
+        <h5 class="mb-0">Configuración de la Cuenta</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted">Aquí podrás cambiar tu contraseña, editar tu perfil, etc.</p>
+        <!-- Contenido futuro aquí -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================
+       SECCIÓN 3: HISTORIAL / ACTIVIDAD (placeholder)
+  ================================== -->
+  <section id="actividad" class="mb-5">
+    <div class="card shadow rounded-4">
+      <div class="card-header bg-secondary text-white text-center">
+        <h5 class="mb-0">Historial de Actividad</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted">Aquí aparecerán tus acciones recientes en la plataforma.</p>
+        <!-- Contenido futuro aquí -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===============================
+       BOTÓN DE CIERRE DE SESIÓN
+  ================================== -->
+  <div class="text-end">
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-primary">
+      Cerrar Sesión
+    </a>
+  </div>
+</div>
+{% endblock %}

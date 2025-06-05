@@ -19,15 +19,26 @@
     <div class="carousel-item">
       <img src="{{ url_for('static', filename='img/slide3.jpg') }}" class="d-block w-100" alt="Imagen 3">
     </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='img/slide4.jpg') }}" class="d-block w-100" alt="Imagen 4">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='img/slide5.jpg') }}" class="d-block w-100" alt="Imagen 5">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='img/slide6.jpg') }}" class="d-block w-100" alt="Imagen 5">
+    </div>
+
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Anterior</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Siguiente</span>
-  </button>
 </div>
 
 <section id="presentacion" class="mb-5">
@@ -54,7 +65,7 @@ Desde la infraestructura de redes hasta las estrategias de marketing digital, mi
   <<section class="py-5 bg-light" id="servicios">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold text-primary">Servicios</h2>
+      <h2 class="fw-bold ">Servicios</h2>
       <p class="text-muted">Soluciones tecnológicas táctiles, humanas y orientadas a resultados.</p>
     </div>
     <div class="row g-4">
@@ -153,5 +164,5 @@ Desde la infraestructura de redes hasta las estrategias de marketing digital, mi
   </div>
 </section>
 
-</section>
+
 {% endblock %}

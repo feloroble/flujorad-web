@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Administrador {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <h2 class="text-primary mb-4">Panel de Administración</h2>
+
+  <!-- SECCIÓN: Información del Administrador -->
+  <section class="mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Mi Información</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Nombre:</strong> {{ current_user.name }}</p>
+        <p><strong>Email:</strong> {{ current_user.email }}</p>
+        <p><strong>Rol:</strong> {{ current_user.role }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: Gestión de Usuarios -->
+  <section class="mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Gestión de Usuarios</h5>
+      </div>
+      <div class="card-body">
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary">Cambiar roles de usuarios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: Blog -->
+  <section class="mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Publicaciones del Blog</h5>
+      </div>
+      <div class="card-body">
+        <a href="{{ url_for('admin.create_post') }}" class="btn btn-outline-info">Crear nueva publicación</a>
+        <a href="{{ url_for('admin.blog) }}" class="btn btn-outline-info">Ver todas las publicaciones</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: Comentarios -->
+  <section class="mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Comentarios de Usuarios</h5>
+      </div>
+      <div class="card-body">
+        <a href="" class="btn btn-outline-dark">Ver comentarios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: Otras Configuraciones -->
+  <section class="mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-warning">
+        <h5 class="mb-0">Configuraciones adicionales</h5>
+      </div>
+      <div class="card-body">
+        <p>Puedes agregar aquí configuraciones globales, estadísticas o accesos rápidos.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

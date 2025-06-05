@@ -11,6 +11,12 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
+    role = db.Column(db.String(20), nullable=False, default='user')  # 'admin' o 'user'
+
+    def is_admin(self):
+        return self.role == 'admin'
+    def is_user(self):
+        return self.role == 'user'
 
     def __repr__(self):
         return f'<User {self.email}>'
