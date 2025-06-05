@@ -1,6 +1,44 @@
 {% extends 'base.html' %}
-{% block title %}Contacto{% endblock %}
+{% block title %}Contacto - Tecno T@ctil{% endblock %}
+
 {% block content %}
-<h2>Contáctame</h2>
-<p>Puedes enviarme un mensaje o conectarte por mis redes sociales.</p>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="text-center text-primary mb-4">Contáctame</h2>
+      <p class="text-center mb-5">
+        ¿Tienes alguna consulta, propuesta profesional o deseas colaborar conmigo? <br>
+        Rellena el formulario y me pondré en contacto contigo lo antes posible.
+      </p>
+
+      <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          {{ form.name.label(class_='form-label') }}
+          {{ form.name(class_='form-control', placeholder='Tu nombre completo') }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.email.label(class_='form-label') }}
+          {{ form.email(class_='form-control', placeholder='correo@ejemplo.com') }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.subject.label(class_='form-label') }}
+          {{ form.subject(class_='form-control', placeholder='Asunto del mensaje') }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.message.label(class_='form-label') }}
+          {{ form.message(class_='form-control', rows='5', placeholder='Escribe tu mensaje aquí...') }}
+        </div>
+
+        <div class="text-center">
+          {{ form.submit(class_='btn btn-primary px-5') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

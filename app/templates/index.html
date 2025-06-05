@@ -1,39 +1,157 @@
 {% extends 'base.html' %}
-{% block title %}Inicio{% endblock %}
+{% block title %} Inicio{% endblock %}
 {% block content %}
-<div id="carouselExampleIndicators" class="carousel slide mb-5" data-bs-ride="carousel">
+
+
+<!-- Carrusel -->
+<!-- Título profesional -->
+<h1 class="titulo-profesional">Tu camino al exito</h1>
+
+<!-- Carrusel Bootstrap mejorado -->
+<div id="mainCarousel" class="carousel slide mb-5 container" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="{{ url_for('static', filename='img/banner1.jpg') }}" class="d-block w-100" alt="...">
+      <img src="{{ url_for('static', filename='img/slide1.jpg') }}" class="d-block w-100" alt="Imagen 1">
     </div>
     <div class="carousel-item">
-      <img src="{{ url_for('static', filename='img/banner2.jpg') }}" class="d-block w-100" alt="...">
+      <img src="{{ url_for('static', filename='img/slide2.jpg') }}" class="d-block w-100" alt="Imagen 2">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='img/slide3.jpg') }}" class="d-block w-100" alt="Imagen 3">
     </div>
   </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
 </div>
 
 <section id="presentacion" class="mb-5">
-  <h2>Presentación</h2>
-  <p>Soy Félix Rodríguez Roble, fundador de Tecno T@ctil. Administrador de redes, ingeniero eléctrico y experto en túneles de ventas. Ayudo a profesionales y empresas a automatizar y escalar sus procesos digitales de forma segura, funcional y humana.</p>
+  <h2>👋 ¿Quién soy? | Presentación personal</h2>
+  <p class="text-justify" style="text-align: justify; page-break-before: always;" >Hola, soy <span class="fw-bold">Félix Rodríguez Roble</span> , fundador de Tecno T@ctil, una marca que nace de la pasión por la tecnología aplicada con propósito.
+Soy Ingeniero Eléctrico, Administrador de Redes y Especialista en Túneles de Venta, con más de 10 años de experiencia ayudando a empresas y emprendedores a automatizar sus procesos, escalar sus ventas y construir infraestructuras digitales sólidas. <br><br>
+
+
+Pero más allá de los títulos, me apasiona hacer que la tecnología se sienta, que sea tangible, que se transforme en una herramienta real para el crecimiento. Por eso, creé <span class="fw-bold">Tecno T@ctil</span> : para acercarte a la tecnología desde un enfoque práctico, humano y orientado a resultados.</p>
 </section>
 
 <section id="mision" class="mb-5">
-  <h2>Misión</h2>
-  <p>Brindar soluciones tecnológicas integrales, seguras y personalizadas que empoderen a individuos y organizaciones a través del uso eficaz de la tecnología.</p>
+  <h2>🌐 <span class="fw-bold">Misión</span> </h2>
+  <p class="text-justify" style="text-align: justify;" style="page-break-after: always;"  > <span class="fw-bold">Empoderar personas y empresas a través de soluciones tecnológicas integrales, accesibles y humanas.</span>  <br><br>
+Desde la infraestructura de redes hasta las estrategias de marketing digital, mi objetivo es combinar mi experiencia técnica con la comprensión práctica del negocio para lograr resultados reales, sostenibles y medibles.</p>
 </section>
 
 <section id="vision" class="mb-5">
-  <h2>Visión</h2>
-  <p>Ser un referente en innovación tecnológica personalizada en el mundo hispano, fusionando lo humano con lo digital.</p>
+  <h2>🔭 <span class="fw-bold">Visión</span> </h2>
+  <p class="text-justify" style="text-align: justify;" style="page-break-after: always;"  >Ser un referente en Latinoamérica en la integración de tecnología, automatización y ventas digitales, aportando soluciones innovadoras y táctiles que transformen procesos complejos en experiencias simples, efectivas y humanas.</p>
 </section>
 
 <section id="servicios" class="mb-5">
-  <h2>Servicios</h2>
-  <ul>
-    <li>Consultoría en redes</li>
-    <li>Automatización de ventas</li>
-    <li>Soporte en infraestructura eléctrica</li>
-    <li>Asesoría en tecnología aplicada</li>
-  </ul>
+  <<section class="py-5 bg-light" id="servicios">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary">Servicios</h2>
+      <p class="text-muted">Soluciones tecnológicas táctiles, humanas y orientadas a resultados.</p>
+    </div>
+    <div class="row g-4">
+
+      <!-- Servicio 1 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-diagram-3-fill fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Diseño de Túneles de Venta</h5>
+            <p class="card-text text-muted">
+              Automatiza tu proceso comercial y convierte más clientes con embudos diseñados estratégicamente para cada etapa del recorrido.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicio 2 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-hdd-network-fill fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Administración de Redes</h5>
+            <p class="card-text text-muted">
+              Implementación, configuración y mantenimiento de redes seguras y escalables para empresas modernas.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicio 3 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-cpu-fill fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Infraestructura Tecnológica</h5>
+            <p class="card-text text-muted">
+              Planificación e implementación de soluciones tecnológicas adaptadas a las necesidades de tu negocio.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicio 4 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-bar-chart-line-fill fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Optimización y Análisis de Ventas</h5>
+            <p class="card-text text-muted">
+              Uso de datos para identificar oportunidades de mejora, aumentar la conversión y mejorar el retorno de inversión.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicio 5 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-robot fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Automatización de Procesos</h5>
+            <p class="card-text text-muted">
+              Implementación de herramientas digitales que reducen tareas repetitivas y aumentan la productividad.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Servicio 6 -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="mb-3">
+              <i class="bi bi-person-video3 fs-1 text-primary"></i>
+            </div>
+            <h5 class="card-title fw-bold">Mentoría y Capacitación</h5>
+            <p class="card-text text-muted">
+              Formación personalizada para emprendedores y equipos que quieren dominar la tecnología y las ventas digitales.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 </section>
 {% endblock %}
