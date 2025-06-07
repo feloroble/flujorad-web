@@ -49,7 +49,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         flash('Publicación creada con éxito.')
-        return redirect(url_for('blog.index'))
+        return redirect(url_for('admin.blog'))
 
     return render_template('admin/create_post.html', form=form)
 
@@ -65,3 +65,9 @@ def manage_users():
 @admin_required
 def comments():
     render_template('admin/post_comentario.html')
+
+# Ruta para ver una publicación individual
+@admin_bp.route('/<int:post_id>')
+def detalle(post_id):
+    post = BlogPost.query.get_or_404(post_id)
+    return render_template('admin/detail.html', post=post)
