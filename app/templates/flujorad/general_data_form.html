@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Datos Generales{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Crear Datos Generales</h2>
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.circuit_name.label(class="form-label") }}
+      {{ form.circuit_name(class="form-control", placeholder="Nombre del circuito") }}
+      {% for error in form.circuit_name.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.base_power.label(class="form-label") }}
+      {{ form.base_power(class="form-control", placeholder="Potencia base") }}
+      {% for error in form.base_power.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.base_voltage.label(class="form-label") }}
+      {{ form.base_voltage(class="form-control", placeholder="Tensión base del nodo 0") }}
+      {% for error in form.base_voltage.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.specific_voltage.label(class="form-label") }}
+      {{ form.specific_voltage(class="form-control", placeholder="Tensión específica para nodo 0") }}
+      {% for error in form.specific_voltage.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.standard_id.label(class="form-label") }}
+      {{ form.standard_id(class="form-select") }}
+      {% for error in form.standard_id.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.model_id.label(class="form-label") }}
+      {{ form.model_id(class="form-select") }}
+      {% for error in form.model_id.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
+{% endblock %}

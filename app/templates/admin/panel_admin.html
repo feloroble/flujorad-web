@@ -65,7 +65,16 @@
         <h5 class="mb-0">Configuraciones adicionales</h5>
       </div>
       <div class="card-body">
-        <p>Puedes agregar aquí configuraciones globales, estadísticas o accesos rápidos.</p>
+        <div class="d-flex gap-3 justify-content-center my-5">
+          <a href="{{ url_for('flujorad.manage_load_models') }}" class="btn btn-primary btn-lg">
+            Crear Modelo
+          </a>
+          <a href="{{ url_for('flujorad.manage_standards') }}" class="btn btn-secondary btn-lg">
+            Crear Norma
+          </a>
+        </div>
+  
+  
       </div>
     </div>
   </section>

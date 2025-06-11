@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Crear Modelo{% endblock %}
+
+{% block content %}
+  <h2 class="mb-4">Crear Modelo</h2>
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control", placeholder="Nombre del modelo") }}
+      {% for error in form.name.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.parameter_a.label(class="form-label") }}
+      {{ form.parameter_a(class="form-control", placeholder="Parámetro A") }}
+      {% for error in form.parameter_a.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.parameter_b.label(class="form-label") }}
+      {{ form.parameter_b(class="form-control", placeholder="Parámetro B") }}
+      {% for error in form.parameter_b.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
+{% endblock %}
