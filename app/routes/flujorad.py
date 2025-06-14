@@ -3,7 +3,7 @@
 from app.extensions import db
 from flask_login import current_user, login_required
 from app.utils.decorators import admin_required
-from flask import Blueprint, redirect, render_template, request, url_for,flash
+from flask import Blueprint, abort, redirect, render_template, request, url_for,flash
 
 from app.models.flujorad import GeneralData, LoadModel, Standard
 from app.routes.forms import GeneralDataForm, ModelForm, StandardForm
@@ -72,3 +72,37 @@ def create_general_data():
         return redirect(url_for('admin.panel_admin'))
 
     return render_template('flujorad/general_data_form.html', form=form)
+
+
+@flujorad_bp.route('/general-view')
+@login_required
+def view_general_data():
+    data = GeneralData.query.filter_by(user_id=current_user.id).all()
+    return render_template('flujorad/general_data_list.html', data=data)
+
+@flujorad_bp.route('/general-data/<int:data_id>', methods=['GET', 'POST'])
+@login_required
+def edit_general_data(data_id):
+    data = GeneralData.query.get_or_404(data_id)
+
+    # Verificar que el usuario sea el dueño del dato
+    if data.user_id != current_user.id:
+        abort(403)
+
+    form = GeneralDataForm(obj=data)
+
+    # Rellenar select dinámicamente
+    form.standard_id.choices = [(s.id, s.name) for s in Standard.query.all()]
+    form.model_id.choices = [(m.id, m.name) for m in LoadModel.query.all()]
+
+    if form.validate_on_submit():
+        data.circuit_name = form.circuit_name.data
+        data.base_power = form.base_power.data
+        data.base_voltage_n0 = form.base_voltage.data
+        data.specific_voltage_n0 = form.specific_voltage.data
+        data.standard_id = form.standard_id.data
+        data.model_id = form.model_id.data
+        db.session.commit()
+        return redirect(url_for('flujorad.view_general_data'))
+
+    return render_template('flujorad/edit_general_data.html', form=form)

@@ -7,12 +7,12 @@
   <h2 class="text-center text-primary mb-4">Bienvenido, {{ current_user.name }}</h2>
 
   <!-- ===============================
-       SECCIÓN 1: DATOS PERSONALES
+       SECCIÓN 1: DATOS PERSONALES 
   ================================== -->
   <section id="datos-personales" class="mb-5">
     <div class="card shadow rounded-4">
       <div class="card-header bg-primary text-white text-center">
-        <h5 class="mb-0">Tus Datos Personales</h5>
+        <h5 class="mb-0">Tus Datos Personales y Opciones de la cuenta</h5>
       </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
@@ -41,17 +41,19 @@
   <section id="configuracion" class="mb-5">
     <div class="card shadow rounded-4">
       <div class="card-header bg-info text-white text-center">
-        <h5 class="mb-0">Configuración de la Cuenta</h5>
+        <h5 class="mb-0">OPCIONES DEL USUARIO</h5>
       </div>
       <div class="card-body">
-        <p class="text-muted">Aquí podrás cambiar tu contraseña, editar tu perfil, etc.</p>
-        <!-- Contenido futuro aquí -->
+        <div class="text-center">
+          <a href="{{ url_for('flujorad.create_general_data') }}" class="btn btn-primary">
+            FlujoRAD - Crear Datos Generales
+          </a>
+          <a href="{{ url_for('flujorad.view_general_data') }}" class="btn btn-primary">
+            FlujoRAD - Ver Datos Generales
+          </a>
+        </div>
       </div>
-      <div class="text-center">
-        <a href="{{ url_for('flujorad.create_general_data') }}" class="btn btn-primary">
-          FlujoRAD
-        </a>
-    </div>
+  
   </section>
 
   <!-- ===============================

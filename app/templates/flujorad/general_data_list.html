@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Datos Generales Guardados{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">Datos Generales del Usuario</h2>
+
+    <a href="{{ url_for('user.panel_user') }}" class="btn btn-secondary mb-3">← Volver al Panel</a>
+
+    {% if data %}
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Nombre del Circuito</th>
+                <th>Potencia Base</th>
+                <th>Tensión Base Nodo 0</th>
+                <th>Tensión Específica Nodo 0</th>
+                <th>Norma</th>
+                <th>Modelo</th>
+                <th>Creado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in data %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ entry.circuit_name }}</td>
+                <td>{{ entry.base_power }}</td>
+                <td>{{ entry.base_voltage_n0 }}</td>
+                <td>{{ entry.specific_voltage_n0 }}</td>
+                <td>{{ entry.standard.name if entry.standard else '—' }}</td>
+                <td>{{ entry.model.name if entry.model else '—' }}</td>
+                <td>{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <a href="{{ url_for('flujorad.edit_general_data', data_id=entry.id) }}" class="btn btn-sm btn-warning">
+                        Editar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="text-muted">No hay datos generales guardados.</p>
+    {% endif %}
+</div>
+{% endblock %}
