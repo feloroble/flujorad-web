@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block styles %}
+<link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-9">
+        <div id="network" style="height: 600px; border: 1px solid #ddd"></div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Acciones</h5>
+                <a href="{{ url_for('flujorad.crear_nodo', general_id=general.id) }}" 
+                   class="btn btn-sm btn-block btn-success mb-2">+ Nodo</a>
+                <a href="{{ url_for('flujorad.crear_linea', general_id=general.id) }}" 
+                   class="btn btn-sm btn-block btn-primary">+ Línea</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script>
+    const nodes = new vis.DataSet([
+        {% for nodo in nodos %}
+        { 
+            id: {{ nodo.id }}, 
+            label: "{{ nodo.nombre_nodo }}",
+            title: `P=${% raw %}{{ nodo.carga_real }}{% endraw %}kW\nQ=${% raw %}{{ nodo.carga_imaginaria }}{% endraw %}kvar`,
+            shape: "box"
+        },
+        {% endfor %}
+    ]);
+
+    const edges = new vis.DataSet([
+        {% for linea in lineas %}
+        { 
+            from: {{ linea.nodo_envio_id }}, 
+            to: {{ linea.nodo_recepcion_id }},
+            label: "{{ linea.tipo }}",
+            arrows: "to",
+            physics: true
+        },
+        {% endfor %}
+    ]);
+
+    const container = document.getElementById("network");
+    const data = { nodes, edges };
+    const options = {
+        nodes: { font: { size: 14 } },
+        edges: { smooth: true },
+        physics: {
+            enabled: true,
+            solver: "forceAtlas2Based"
+        }
+    };
+    new vis.Network(container, data, options);
+</script>
+{% endblock %}

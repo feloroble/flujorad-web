@@ -3,14 +3,12 @@
 from app.extensions import db
 from flask_login import current_user, login_required
 from app.utils.decorators import admin_required
-from flask import Blueprint, abort, redirect, render_template, request, url_for,flash
+from flask import Blueprint, abort, redirect, render_template, request, url_for, flash
 
-from app.models.flujorad import GeneralData, LoadModel, Standard
-from app.routes.forms import GeneralDataForm, ModelForm, StandardForm
-
+from app.models.flujorad import Circuito, GeneralData, Linea, LoadModel, NodoData, Standard
+from app.routes.forms import GeneralDataForm, ModelForm, NodoDataForm, StandardForm
 
 flujorad_bp = Blueprint('flujorad', __name__)
-
 
 @flujorad_bp.route('/standards', methods=['GET', 'POST'])
 @login_required
@@ -26,83 +24,91 @@ def manage_standards():
     standards = Standard.query.all()
     return render_template('flujorad/standard_form.html', form=form, standards=standards)
 
-
-
-
 @flujorad_bp.route('/load-models', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def manage_load_models():
     form = ModelForm()
     if form.validate_on_submit():
-         model = LoadModel(
+        model = LoadModel(
             name=form.name.data,
             parametro_a=form.parameter_a.data,
             parametro_b=form.parameter_b.data
         )
-         db.session.add(model)
-         db.session.commit()
-         return redirect(url_for('flujorad.manage_load_models'))
+        db.session.add(model)
+        db.session.commit()
+        return redirect(url_for('flujorad.manage_load_models'))
 
     models = LoadModel.query.all()
     return render_template('flujorad/model_form.html', form=form, models=models)
 
-@flujorad_bp.route('/general-data', methods=['GET', 'POST'])
+@flujorad_bp.route('/datos_generales/<int:general_id>/editar', methods=['GET', 'POST'])
 @login_required
-def create_general_data():
-    form = GeneralDataForm()
-
-    # Llenado dinámico de opciones
-    form.standard_id.choices = [(s.id, s.name) for s in Standard.query.all()]
-    form.model_id.choices = [(m.id, m.name) for m in LoadModel.query.all()]
-
-    if form.validate_on_submit():
-        data = GeneralData(
-            user_id=current_user.id,
-            circuit_name=form.circuit_name.data,
-            base_power=form.base_power.data,
-            base_voltage_n0=form.base_voltage.data,
-            specific_voltage_n0=form.specific_voltage.data,
-            standard_id=form.standard_id.data,
-            model_id=form.model_id.data
-        )
-        db.session.add(data)
-        db.session.commit()
-        flash('Datos generales guardados correctamente.', 'success')
-        return redirect(url_for('admin.panel_admin'))
-
-    return render_template('flujorad/general_data_form.html', form=form)
-
-
-@flujorad_bp.route('/general-view')
-@login_required
-def view_general_data():
-    data = GeneralData.query.filter_by(user_id=current_user.id).all()
-    return render_template('flujorad/general_data_list.html', data=data)
-
-@flujorad_bp.route('/general-data/<int:data_id>', methods=['GET', 'POST'])
-@login_required
-def edit_general_data(data_id):
-    data = GeneralData.query.get_or_404(data_id)
-
-    # Verificar que el usuario sea el dueño del dato
-    if data.user_id != current_user.id:
+def editar_datos_generales(general_id):
+    general = GeneralData.query.get_or_404(general_id)
+    if general.user_id != current_user.id:
         abort(403)
-
-    form = GeneralDataForm(obj=data)
-
-    # Rellenar select dinámicamente
-    form.standard_id.choices = [(s.id, s.name) for s in Standard.query.all()]
-    form.model_id.choices = [(m.id, m.name) for m in LoadModel.query.all()]
-
+    form = GeneralDataForm(obj=general)
     if form.validate_on_submit():
-        data.circuit_name = form.circuit_name.data
-        data.base_power = form.base_power.data
-        data.base_voltage_n0 = form.base_voltage.data
-        data.specific_voltage_n0 = form.specific_voltage.data
-        data.standard_id = form.standard_id.data
-        data.model_id = form.model_id.data
+        form.populate_obj(general)
         db.session.commit()
-        return redirect(url_for('flujorad.view_general_data'))
+        flash('Datos generales actualizados.', 'success')
+        return redirect(url_for('flujorad.ver_circuitos'))
+    return render_template('flujorad/editar_datos_generales.html', form=form)
 
-    return render_template('flujorad/edit_general_data.html', form=form)
+@flujorad_bp.route('/circuito/nuevo', methods=['GET', 'POST'])
+@login_required
+def nuevo_circuito():
+    # Aquí implementa la lógica para crear un nuevo circuito, según tu modelo Circuito
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        if not nombre:
+            flash('El nombre es obligatorio.', 'danger')
+            return redirect(url_for('flujorad.nuevo_circuito'))
+        nuevo = Circuito(nombre=nombre, user_id=current_user.id)
+        db.session.add(nuevo)
+        db.session.commit()
+        flash('Circuito creado correctamente.', 'success')
+        return redirect(url_for('flujorad.ver_circuitos'))
+    return render_template('flujorad/nuevo_circuito.html')
+
+@flujorad_bp.route('/circuito/<int:circuito_id>/eliminar', methods=['POST'])
+@login_required
+def eliminar_circuito(circuito_id):
+    circuito = Circuito.query.get_or_404(circuito_id)
+    if circuito.user_id != current_user.id:
+        abort(403)
+    db.session.delete(circuito)
+    db.session.commit()
+    flash('Circuito eliminado.', 'success')
+    return redirect(url_for('flujorad.ver_circuitos'))
+
+@flujorad_bp.route('/iniciar_flujo', methods=['POST'])
+@login_required
+def iniciar_flujo():
+    general_id = request.form.get('general_id')
+    circuito_id = request.form.get('circuito_id')
+
+    # Validar existencia y permisos
+    general = GeneralData.query.filter_by(id=general_id, user_id=current_user.id).first()
+    circuito = Circuito.query.filter_by(id=circuito_id, user_id=current_user.id).first()
+
+    if not general or not circuito:
+        flash('Selección inválida.', 'danger')
+        return redirect(url_for('flujorad.ver_circuitos'))
+
+    # Aquí ejecuta el cálculo o redirige a la vista de resultados
+    # Por ejemplo, redirigir a una vista para mostrar resultados del flujo
+    flash('Cálculo de flujo iniciado.', 'info')
+    return redirect(url_for('flujorad.resultado_flujo', general_id=general.id, circuito_id=circuito.id))
+
+@flujorad_bp.route('/resultado_flujo/<int:general_id>/<int:circuito_id>')
+@login_required
+def resultado_flujo(general_id, circuito_id):
+    # Verifica permisos
+    general = GeneralData.query.filter_by(id=general_id, user_id=current_user.id).first_or_404()
+    circuito = Circuito.query.filter_by(id=circuito_id, user_id=current_user.id).first_or_404()
+
+    # Implementa lógica para mostrar resultados de flujo de carga
+    # Por ahora solo muestra plantilla placeholder
+    return render_template('flujorad/resultado_flujo.html', general=general, circuito=circuito)

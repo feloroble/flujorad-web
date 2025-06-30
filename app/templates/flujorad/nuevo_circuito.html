@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Crear Nuevo Circuito</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.circuit_name.label }} {{ form.circuit_name(class="form-control") }}
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form.base_power.label }} {{ form.base_power(class="form-control") }}
+        </div>
+        <div class="col-md-6">
+            {{ form.base_voltage.label }} {{ form.base_voltage(class="form-control") }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Siguiente: Añadir Nodo</button>
+</form>
+{% endblock %}

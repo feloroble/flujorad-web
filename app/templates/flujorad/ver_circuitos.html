@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Ver Circuitos y Datos Generales{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h4 class="mb-4">Datos Generales</h4>
+  {% if circuitos_generales %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Nombre Circuito</th>
+          <th>Potencia Base</th>
+          <th>Voltaje Base</th>
+          <th>Creado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dg in circuitos_generales %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ dg.circuit_name }}</td>
+          <td>{{ dg.base_power }}</td>
+          <td>{{ dg.base_voltage_n0 }}</td>
+          <td>{{ dg.created_at.strftime('%Y-%m-%d') }}</td>
+          <td>
+            <a href="{{ url_for('flujorad.editar_datos_generales', general_id=dg.id) }}" class="btn btn-sm btn-warning">
+              Editar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tienes datos generales guardados.</p>
+  {% endif %}
+
+  <hr>
+
+  <h4 class="mb-4">Circuitos</h4>
+  <div class="mb-3 text-end">
+    <a href="{{ url_for('flujorad.nuevo_circuito') }}" class="btn btn-primary">
+      Agregar Nuevo Circuito
+    </a>
+  </div>
+
+  {% if circuitos %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Nombre Circuito</th>
+          <th>Creado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in circuitos %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+          <td>
+            <form action="{{ url_for('flujorad.eliminar_circuito', circuito_id=c.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Está seguro de eliminar este circuito?');">
+              <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tienes circuitos guardados.</p>
+  {% endif %}
+
+  <hr>
+
+  <h4 class="mb-4">Iniciar Flujo de Carga</h4>
+  <form action="{{ url_for('flujorad.iniciar_flujo') }}" method="POST">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="general_id" class="form-label">Selecciona Datos Generales</label>
+        <select name="general_id" id="general_id" class="form-select" required>
+          <option value="" disabled selected>-- Seleccione --</option>
+          {% for dg in circuitos_generales %}
+          <option value="{{ dg.id }}">{{ dg.circuit_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="circuito_id" class="form-label">Selecciona Circuito</label>
+        <select name="circuito_id" id="circuito_id" class="form-select" required>
+          <option value="" disabled selected>-- Seleccione --</option>
+          {% for c in circuitos %}
+          <option value="{{ c.id }}">{{ c.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Iniciar Cálculo</button>
+  </form>
+</div>
+{% endblock %}

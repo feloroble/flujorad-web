@@ -47,3 +47,11 @@ class GeneralDataForm(FlaskForm):
     standard_id = SelectField('Norma', coerce=int, validators=[DataRequired()])
     model_id = SelectField('Modelo', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Guardar Datos')
+
+class NodoDataForm(FlaskForm):
+    nombre_nodo = StringField('Nombre del Nodo', validators=[DataRequired(), Length(max=100)])
+    carga_real = FloatField('Carga Real (P)', validators=[DataRequired()])
+    carga_imaginaria = FloatField('Carga Imaginaria (Q)', validators=[DataRequired()])
+    valor_condensador = FloatField('Valor del Condensador (kvar)', validators=[])
+    tension_base_nodo = FloatField('Tensión Base del Nodo', validators=[DataRequired()])
+    submit = SubmitField('Guardar Nodo')

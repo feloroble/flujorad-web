@@ -1,12 +1,18 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user
 from app.extensions import db
+from app.models.flujorad import Circuito, GeneralData
 
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/panel-user')
 def panel_user():
-    return render_template('user/panel_user.html')
+    datos_generales = GeneralData.query.filter_by(user_id=current_user.id).all()
+    circuitos = Circuito.query.filter_by(user_id=current_user.id).all()
+    return render_template('user/panel_user.html',
+        datos_generales=datos_generales,
+        circuitos=circuitos
+    )
 
 @user_bp.route('/editar-perfil', methods=['GET', 'POST'])
 def editar_perfil():
