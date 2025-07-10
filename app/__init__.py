@@ -35,4 +35,10 @@ def create_app():
     # Registrar rutas
     register_routes(app)
 
+    from flask import render_template
+
+    @app.errorhandler(404)
+    def pagina_no_encontrada(error):
+      return render_template('error.html'), 404
+
     return app

@@ -3,21 +3,57 @@
 {% block content %}
 <div class="container mt-5">
   <h2>Crear publicación</h2>
-  <form method="POST" enctype="multipart/form-data">
+
+  <!-- Mostrar errores o mensajes -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data" id="form-pop">
     {{ form.hidden_tag() }}
+
     <div class="mb-3">
       {{ form.title.label(class="form-label") }}
       {{ form.title(class="form-control") }}
+      {% for error in form.title.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
     </div>
-    <div class="mb-3">
-      {{ form.content.label(class="form-label") }}
-      {{ form.content(class="form-control", rows="6") }}
+
+    <div id="bloques-container"></div>
+
+    <div class="my-3">
+      <button type="button" class="btn btn-secondary me-2" onclick="agregarBloque('texto')">Agregar Texto</button>
+      <button type="button" class="btn btn-secondary" onclick="agregarBloque('imagen')">Agregar Imagen</button>
     </div>
-    <div class="mb-3">
-      {{ form.image.label(class="form-label") }}
-      {{ form.image(class="form-control") }}
-    </div>
+
     {{ form.submit(class="btn btn-primary") }}
   </form>
 </div>
+
+<script>
+  let contador = 0;
+  function agregarBloque(tipo) {
+    const container = document.getElementById("bloques-container");
+    const bloque = document.createElement("div");
+    bloque.classList.add("mb-3", "border", "p-3", "rounded");
+
+    bloque.innerHTML = `
+      <input type="hidden" name="bloques[${contador}][tipo]" value="${tipo}">
+      <label class="form-label">Bloque ${contador + 1} (${tipo})</label>
+      ${tipo === 'texto' ? `
+        <textarea name="bloques[${contador}][contenido]" class="form-control" rows="4" placeholder="Escribe el texto..."></textarea>
+      ` : `
+        <input type="file" name="bloques[${contador}][imagen]" class="form-control">
+      `}
+    `;
+
+    container.appendChild(bloque);
+    contador++;
+  }
+</script>
 {% endblock %}

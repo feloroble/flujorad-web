@@ -21,10 +21,8 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Mensaje', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Enviar mensaje')
 
-class BlogPostForm(FlaskForm):
+class PublicacionForm(FlaskForm):
     title = StringField('Título', validators=[DataRequired()])
-    content = TextAreaField('Contenido', validators=[DataRequired()])
-    image = FileField('Imagen', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Solo imágenes')])
     submit = SubmitField('Publicar')
 
 class ModelForm(FlaskForm):

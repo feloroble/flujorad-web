@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}{{ publicacion.titulo }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2>{{ publicacion.titulo }}</h2>
+  <p class="text-muted small">
+    Publicado por {{ publicacion.usuario.nombre }} el {{ publicacion.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+  </p>
+  <hr>
+
+  {% for bloque in publicacion.contenidos %}
+    {% if bloque.tipo == 'texto' %}
+      <p>{{ bloque.contenido }}</p>
+    {% elif bloque.tipo == 'imagen' %}
+      <img src="{{ url_for('static', filename=bloque.ruta_imagen.split('static/')[-1]) }}" class="img-fluid my-3">
+    {% endif %}
+  {% endfor %}
+
+  <hr>
+  <h4>Comentarios</h4>
+  {% for comentario in publicacion.comentarios %}
+    <div class="border p-3 my-2 rounded">
+      <strong>{{ comentario.nombre }}</strong> <span class="text-muted small">({{ comentario.fecha.strftime('%d/%m/%Y %H:%M') }})</span>
+      <p>{{ comentario.contenido }}</p>
+    </div>
+  {% else %}
+    <p class="text-muted">No hay comentarios aún.</p>
+  {% endfor %}
+
+  <hr>
+  <h5>Agregar un comentario</h5>
+  <form method="POST" action="{{ url_for('blog.comentar', id=publicacion.id) }}">
+    <div class="mb-3">
+      <input type="text" name="nombre" placeholder="Tu nombre" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <textarea name="contenido" rows="4" class="form-control" placeholder="Escribe tu comentario" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Comentar</button>
+  </form>
+</div>
+{% endblock %}

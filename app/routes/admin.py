@@ -3,9 +3,9 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user,login_required
 from app.extensions import db
 from app.utils.decorators import admin_required
-from .forms import BlogPostForm
+from .forms import PublicacionForm
 from werkzeug.utils import secure_filename
-from app.models.blog  import BlogPost
+from app.models.blog  import  Comentario, Publicacion, PublicacionContenido
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -21,37 +21,57 @@ def panel_admin():
 
 @admin_bp.route('/blog')
 def blog():
-    posts = BlogPost.query.order_by(BlogPost.created_at.desc()).all()
-    return render_template('admin/blog_list.html', posts=posts)
+    publicaciones = Publicacion.query.order_by(Publicacion.fecha_creacion.desc()).all()
+    return render_template('admin/lista.html', publicaciones=publicaciones)
 
 @admin_bp.route('/crear', methods=['GET', 'POST'])
 @admin_required
 def create_post():
-    if not current_user.is_admin:
-        flash('No tienes permiso para crear publicaciones.')
-        return redirect(url_for('main.home'))
+    form = PublicacionForm()
 
-    form = BlogPostForm()
     if form.validate_on_submit():
-        image_filename = None
-        if form.image.data:
-            image_file = form.image.data
-            image_filename = secure_filename(image_file.filename)
-            upload_path = os.path.join(current_app.root_path, 'static', 'uploads', image_filename)
-            image_file.save(upload_path)
+        titulo = form.title.data
+        bloques = []
+        i = 0
 
-        post = BlogPost(
-            title=form.title.data,
-            content=form.content.data,
-            image_filename=image_filename,
-            author=current_user
-        )
-        db.session.add(post)
+        while True:
+            tipo = request.form.get(f'bloques[{i}][tipo]')
+            if not tipo:
+                break
+
+            if tipo == 'texto':
+                contenido = request.form.get(f'bloques[{i}][contenido]')
+                bloques.append({'tipo': 'texto', 'contenido': contenido})
+            elif tipo == 'imagen':
+                imagen = request.files.get(f'bloques[{i}][imagen]')
+                if imagen and imagen.filename:
+                    filename = secure_filename(imagen.filename)
+                    UPLOAD_FOLDER = os.path.join('static', 'uploads')
+                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                    ruta = os.path.join('static/uploads', filename)
+                    imagen.save(ruta)
+                    bloques.append({'tipo': 'imagen', 'ruta': ruta})
+            i += 1
+
+        nueva = Publicacion(titulo=titulo, user_id=current_user.id)
+        db.session.add(nueva)
         db.session.commit()
-        flash('Publicación creada con éxito.')
-        return redirect(url_for('admin.blog'))
 
-    return render_template('admin/create_post.html', form=form)
+        for idx, b in enumerate(bloques):
+            bloque = PublicacionContenido(
+                publicacion_id=nueva.id,
+                tipo=b['tipo'],
+                contenido=b.get('contenido'),
+                ruta_imagen=b.get('ruta'),
+                orden=idx
+            )
+            db.session.add(bloque)
+
+        db.session.commit()
+        flash("Publicación creada correctamente.", "success")
+        return redirect(url_for('admin.blog '))
+
+    return render_template('admin/create_post.html',  form=form )
 
 # Ruta para gestionar usuarios (cambiar roles, etc.)
 @admin_bp.route('/manage_users')
@@ -61,13 +81,22 @@ def manage_users():
     # Aquí puedes pasar una lista de usuarios desde la base de datos
     return render_template('admin/manage_users.html')
 
-@admin_bp.route('/comments')
-@admin_required
-def comments():
-    render_template('admin/post_comentario.html')
+@admin_bp.route('/<int:id>/comentar', methods=['POST'])
+def comentar(id):
+    publicacion = Publicacion.query.get_or_404(id)
+    nombre = request.form.get('nombre')
+    contenido = request.form.get('contenido')
+    if nombre and contenido:
+        comentario = Comentario(publicacion_id=publicacion.id, nombre=nombre, contenido=contenido)
+        db.session.add(comentario)
+        db.session.commit()
+        flash("Comentario enviado correctamente.", "success")
+    else:
+        flash("Todos los campos son obligatorios.", "danger")
+    return redirect(url_for('blog.ver_publicacion', id=id))
 
 # Ruta para ver una publicación individual
-@admin_bp.route('/<int:post_id>')
-def detalle(post_id):
-    post = BlogPost.query.get_or_404(post_id)
-    return render_template('admin/detail.html', post=post)
+@admin_bp.route('/<int:id>')
+def ver_publicacion(id):
+    publicacion = Publicacion.query.get_or_404(id)
+    return render_template('admin/ver.html', publicacion=publicacion)
