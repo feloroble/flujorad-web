@@ -30,8 +30,9 @@ class PublicacionContenido(db.Model):
 class Comentario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     publicacion_id = db.Column(db.Integer, db.ForeignKey('publicacion.id'), nullable=False)
-    nombre = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Nuevo
     contenido = db.Column(db.Text, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
     publicacion = db.relationship('Publicacion', backref='comentarios')
+    user = db.relationship('User', backref='comentarios')  # Nuevo

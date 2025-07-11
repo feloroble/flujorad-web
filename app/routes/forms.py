@@ -53,3 +53,8 @@ class NodoDataForm(FlaskForm):
     valor_condensador = FloatField('Valor del Condensador (kvar)', validators=[])
     tension_base_nodo = FloatField('Tensión Base del Nodo', validators=[DataRequired()])
     submit = SubmitField('Guardar Nodo')
+
+
+class ComentarioForm(FlaskForm):
+    contenido = TextAreaField('Comentario', validators=[DataRequired()])
+    submit = SubmitField('Comentar')

@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user,login_required
 from app.extensions import db
 from app.utils.decorators import admin_required
-from .forms import PublicacionForm
+from .forms import ComentarioForm, PublicacionForm
 from werkzeug.utils import secure_filename
 from app.models.blog  import  Comentario, Publicacion, PublicacionContenido
 
@@ -26,13 +26,19 @@ def blog():
 
 @admin_bp.route('/crear', methods=['GET', 'POST'])
 @admin_required
+@login_required
 def create_post():
     form = PublicacionForm()
 
     if form.validate_on_submit():
         titulo = form.title.data
+        nueva = Publicacion(titulo=titulo, user_id=current_user.id)
+        db.session.add(nueva)
+        db.session.commit()  # Necesario para obtener nueva.id
+
         bloques = []
         i = 0
+        contador = 1
 
         while True:
             tipo = request.form.get(f'bloques[{i}][tipo]')
@@ -42,20 +48,26 @@ def create_post():
             if tipo == 'texto':
                 contenido = request.form.get(f'bloques[{i}][contenido]')
                 bloques.append({'tipo': 'texto', 'contenido': contenido})
+
             elif tipo == 'imagen':
                 imagen = request.files.get(f'bloques[{i}][imagen]')
                 if imagen and imagen.filename:
-                    filename = secure_filename(imagen.filename)
-                    UPLOAD_FOLDER = os.path.join('static', 'uploads')
-                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-                    ruta = os.path.join('static/uploads', filename)
-                    imagen.save(ruta)
-                    bloques.append({'tipo': 'imagen', 'ruta': ruta})
-            i += 1
+                    extension = os.path.splitext(imagen.filename)[1]
+                    filename = f"foto_{current_user.id}_{nueva.id}_{contador}{extension}"
 
-        nueva = Publicacion(titulo=titulo, user_id=current_user.id)
-        db.session.add(nueva)
-        db.session.commit()
+                    # Guardar en /static/uploads/
+                    UPLOAD_FOLDER = os.path.join(current_app.root_path, 'static', 'uploads')
+                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+                    ruta_absoluta = os.path.join(UPLOAD_FOLDER, filename)
+                    imagen.save(ruta_absoluta)
+
+                    # Ruta relativa sin 'static/'
+                    ruta_relativa = f'uploads/{filename}'
+                    bloques.append({'tipo': 'imagen', 'ruta': ruta_relativa})
+                    contador += 1
+
+            i += 1
 
         for idx, b in enumerate(bloques):
             bloque = PublicacionContenido(
@@ -69,9 +81,10 @@ def create_post():
 
         db.session.commit()
         flash("Publicación creada correctamente.", "success")
-        return redirect(url_for('admin.blog '))
+        return redirect(url_for('admin.ver_publicacion', id=nueva.id))
 
-    return render_template('admin/create_post.html',  form=form )
+    return render_template('admin/create_post.html', form=form)
+
 
 # Ruta para gestionar usuarios (cambiar roles, etc.)
 @admin_bp.route('/manage_users')
@@ -82,21 +95,29 @@ def manage_users():
     return render_template('admin/manage_users.html')
 
 @admin_bp.route('/<int:id>/comentar', methods=['POST'])
+@login_required
 def comentar(id):
     publicacion = Publicacion.query.get_or_404(id)
-    nombre = request.form.get('nombre')
-    contenido = request.form.get('contenido')
-    if nombre and contenido:
-        comentario = Comentario(publicacion_id=publicacion.id, nombre=nombre, contenido=contenido)
+    form = ComentarioForm()
+
+    if form.validate_on_submit():
+        comentario = Comentario(
+            publicacion_id=publicacion.id,
+            user_id=current_user.id,
+            contenido=form.contenido.data
+        )
         db.session.add(comentario)
         db.session.commit()
         flash("Comentario enviado correctamente.", "success")
     else:
-        flash("Todos los campos son obligatorios.", "danger")
-    return redirect(url_for('blog.ver_publicacion', id=id))
+        flash("Error en el formulario. Revisa los campos.", "danger")
+
+    return redirect(url_for('admin.ver_publicacion', id=id))
 
 # Ruta para ver una publicación individual
 @admin_bp.route('/<int:id>')
 def ver_publicacion(id):
     publicacion = Publicacion.query.get_or_404(id)
-    return render_template('admin/ver.html', publicacion=publicacion)
+    comentarios = Comentario.query.filter_by(publicacion_id=id).all()
+    form = ComentarioForm()
+    return render_template('admin/ver.html', publicacion=publicacion , comentarios=comentarios, form=form)

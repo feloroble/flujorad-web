@@ -20,7 +20,7 @@
   <h4>Comentarios</h4>
   {% for comentario in publicacion.comentarios %}
     <div class="border p-3 my-2 rounded">
-      <strong>{{ comentario.nombre }}</strong> <span class="text-muted small">({{ comentario.fecha.strftime('%d/%m/%Y %H:%M') }})</span>
+      <strong>{{ comentario.user.name }}</strong> <span class="text-muted small">({{ comentario.fecha.strftime('%d/%m/%Y %H:%M') }})</span>
       <p>{{ comentario.contenido }}</p>
     </div>
   {% else %}
@@ -28,15 +28,22 @@
   {% endfor %}
 
   <hr>
-  <h5>Agregar un comentario</h5>
-  <form method="POST" action="{{ url_for('blog.comentar', id=publicacion.id) }}">
+  {% if current_user.is_authenticated %}
+  <h4>Agregar un comentario</h4>
+  <form method="POST" action="{{ url_for('admin.comentar', id=publicacion.id) }}">
+    {{ form.hidden_tag() }}
+
     <div class="mb-3">
-      <input type="text" name="nombre" placeholder="Tu nombre" class="form-control" required>
+      {{ form.contenido.label(class="form-label") }}
+      {{ form.contenido(class="form-control") }}
+      {% for error in form.contenido.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
     </div>
-    <div class="mb-3">
-      <textarea name="contenido" rows="4" class="form-control" placeholder="Escribe tu comentario" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Comentar</button>
+
+    {{ form.submit(class="btn btn-primary") }}
   </form>
-</div>
+{% else %}
+  <p>Debes <a href="{{ url_for('auth.login') }}">iniciar sesión</a> para comentar.</p>
+{% endif %}
 {% endblock %}
