@@ -8,7 +8,7 @@
     <h3 class="text-center text-primary mb-4">Iniciar sesión</h3>
     <form method="POST" novalidate>
       {{ form.hidden_tag() }}
-      
+
       <div class="mb-3">
         {{ form.email.label(class="form-label text-primary") }}
         {{ form.email(class="form-control") }}
@@ -28,6 +28,9 @@
         {{ form.submit(class="btn btn-primary") }}
       </div>
     </form>
+    <div class="text-end">
+      <a href="{{ url_for('auth.solicitar_recuperacion') }}" class="small">¿Olvidaste tu contraseña?</a>
+    </div>
   </div>
 </div>
 {% endblock %}

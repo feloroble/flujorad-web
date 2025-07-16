@@ -7,6 +7,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ENABLE_BLOG = True
     ENABLE_FLUJO_RAC = False
+    
 
 class DevelopmentConfig(Config):
     DEBUG = True

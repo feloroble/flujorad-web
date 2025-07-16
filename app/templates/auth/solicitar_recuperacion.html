@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Recuperar contraseña{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
+            <h3 class="text-center text-primary mb-4"> ¿Olvidaste tu contraseña? </h3>
+
+
+            <p>Ingresa tu correo electrónico para recibir instrucciones.</p>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

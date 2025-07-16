@@ -4,7 +4,7 @@
 <div class="container mt-5">
   <h2>{{ publicacion.titulo }}</h2>
   <p class="text-muted small">
-    Publicado por {{ publicacion.usuario.nombre }} el {{ publicacion.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+    Publicado por {{ publicacion.usuario.name }} el {{ publicacion.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
   </p>
   <hr>
 
@@ -46,4 +46,5 @@
 {% else %}
   <p>Debes <a href="{{ url_for('auth.login') }}">iniciar sesión</a> para comentar.</p>
 {% endif %}
+</div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import FloatField, SelectField, StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length,EqualTo
 from flask_wtf.file import FileField, FileAllowed
 
 class LoginForm(FlaskForm):
@@ -58,3 +58,17 @@ class NodoDataForm(FlaskForm):
 class ComentarioForm(FlaskForm):
     contenido = TextAreaField('Comentario', validators=[DataRequired()])
     submit = SubmitField('Comentar')
+
+
+class SolicitarRecuperacionForm(FlaskForm):
+    email = StringField('Correo electrónico', validators=[DataRequired(), Email()])
+    submit = SubmitField('Enviar enlace de recuperación')
+
+class RestablecerPasswordForm(FlaskForm):
+    password = PasswordField('Nueva contraseña', validators=[
+        DataRequired(),
+        Length(min=6),
+        EqualTo('confirmar', message='Las contraseñas deben coincidir')
+    ])
+    confirmar = PasswordField('Confirmar contraseña', validators=[DataRequired()])
+    submit = SubmitField('Restablecer contraseña')

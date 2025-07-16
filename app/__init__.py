@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-
+from app.utils.mail import init_mail
 from .extensions import db ,migrate , bcrypt, login_manager,csrf
 from .models import register_models  # carga dinámica
 from .routes import register_routes
@@ -17,6 +17,17 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+
+    # Configuración de correo
+    app.config['MAIL_SERVER'] = 'mail.privateemail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USERNAME'] = 'soporte@tecnotactil.com'
+    app.config['MAIL_PASSWORD'] = 'XgPivL1YW1PFOKQ4mPhLZcurWmT8yc'
+    app.config['MAIL_DEFAULT_SENDER'] = ('Tecno Táctil', 'soporte@tecnotactil.com')
+    
+    init_mail(app)
    
    # Cargar modelo User para LoginManager
     from app.models.user import User
