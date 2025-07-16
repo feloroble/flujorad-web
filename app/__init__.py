@@ -1,9 +1,13 @@
 import os
 from flask import Flask
+from dotenv import load_dotenv
 from app.utils.mail import init_mail
 from .extensions import db ,migrate , bcrypt, login_manager,csrf
 from .models import register_models  # carga dinámica
 from .routes import register_routes
+
+
+load_dotenv()
 
 def create_app():
     app = Flask(__name__, static_folder='static', static_url_path='/static')
@@ -18,15 +22,17 @@ def create_app():
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    # Configuración de correo
-    app.config['MAIL_SERVER'] = 'mail.privateemail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USE_SSL'] = True
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USERNAME'] = 'soporte@tecnotactil.com'
-    app.config['MAIL_PASSWORD'] = 'XgPivL1YW1PFOKQ4mPhLZcurWmT8yc'
-    app.config['MAIL_DEFAULT_SENDER'] = ('Tecno Táctil', 'soporte@tecnotactil.com')
-    
+      # Configuración de correo con variables de entorno
+    app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'mail.privateemail.com')
+    app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 465))
+    app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False').lower() == 'true'
+    app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'False').lower() == 'true'
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = (
+        os.getenv('MAIL_SENDER_NAME', 'Tecno Táctil'),
+        os.getenv('MAIL_USERNAME')
+    )
     init_mail(app)
    
    # Cargar modelo User para LoginManager
