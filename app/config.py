@@ -7,7 +7,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ENABLE_BLOG = True
     ENABLE_FLUJO_RAC = False
-    
+    APP_NAME = "Tecno Táctil"
+    APP_VERSION = "1.0.0"
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -17,3 +18,8 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     ENABLE_FLUJO_RAC = False
+    AC = False
+
+class TestingConfig(Config):
+    TESTING = True
+    FLASK_ENV = 'testing'

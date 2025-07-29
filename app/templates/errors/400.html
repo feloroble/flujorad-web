@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Error 400 - Solicitud Incorrecta{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="text-center">
+      <!-- Ícono de error -->
+      <div class="mb-4">
+        <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 5rem;"></i>
+      </div>
+      
+      <!-- Título del error -->
+      <h1 class="titulo-profesional text-warning mb-3">Error 400</h1>
+      <h2 class="h4 mb-4">Solicitud Incorrecta</h2>
+      
+      <!-- Mensaje explicativo -->
+      <div class="alert alert-warning" role="alert">
+        <h5 class="alert-heading">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          ¿Qué significa esto?
+        </h5>
+        <p class="mb-0">
+          La solicitud que enviaste no pudo ser procesada debido a un error en los datos enviados. 
+          Esto puede deberse a información faltante o incorrecta en el formulario.
+        </p>
+      </div>
+      
+      <!-- Sugerencias -->
+      <div class="card border-warning mb-4">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+            Qué puedes hacer:
+          </h6>
+          <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Verifica que todos los campos requeridos estén completos</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Asegúrate de que el formato de los datos sea correcto</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Intenta recargar la página y volver a enviar</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Botones de acción -->
+      <div class="d-flex justify-content-center gap-3">
+        <a href="javascript:history.back()" class="btn btn-outline-primary">
+          <i class="bi bi-arrow-left me-2"></i>Volver atrás
+        </a>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+          <i class="bi bi-house-fill me-2"></i>Ir al inicio
+        </a>
+      </div>
+      
+      <!-- Información de contacto -->
+      <div class="mt-4 text-muted">
+        <small>
+          Si el problema persiste, 
+          <a href="{{ url_for('main.contacto') }}" class="text-decoration-none">contáctanos</a>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

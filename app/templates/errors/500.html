@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Error 500 - Error del Servidor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="text-center">
+      <!-- Ícono de error -->
+      <div class="mb-4">
+        <i class="bi bi-server text-danger" style="font-size: 5rem;"></i>
+      </div>
+      
+      <!-- Título del error -->
+      <h1 class="titulo-profesional text-danger mb-3">Error 500</h1>
+      <h2 class="h4 mb-4">Error Interno del Servidor</h2>
+      
+      <!-- Mensaje explicativo -->
+      <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          Algo salió mal en nuestro servidor
+        </h5>
+        <p class="mb-0">
+          Estamos experimentando un problema técnico temporal. Nuestro equipo ha sido notificado 
+          automáticamente y está trabajando para solucionarlo lo antes posible.
+        </p>
+      </div>
+      
+      <!-- Sugerencias -->
+      <div class="card border-danger mb-4">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-lightbulb-fill text-danger me-2"></i>
+            Qué puedes hacer:
+          </h6>
+          <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Esperar unos minutos e intentar de nuevo</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Recargar la página</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Reportar este error si persiste</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Estado del sistema -->
+      <div class="alert alert-warning mb-4" role="alert">
+        <h6 class="alert-heading">
+          <i class="bi bi-tools me-2"></i>
+          Estamos trabajando en ello
+        </h6>
+        <p class="mb-2">Nuestro equipo técnico ha sido notificado automáticamente.</p>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+               role="progressbar" style="width: 75%"></div>
+        </div>
+        <small class="text-muted">Solucionando el problema...</small>
+      </div>
+      
+      <!-- Botones de acción -->
+      <div class="d-flex justify-content-center gap-3 mb-4">
+        <button onclick="location.reload()" class="btn btn-outline-danger">
+          <i class="bi bi-arrow-clockwise me-2"></i>Recargar página
+        </button>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+          <i class="bi bi-house-fill me-2"></i>Ir al inicio
+        </a>
+      </div>
+      
+      <!-- Información de contacto -->
+      <div class="card bg-light">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-headset text-primary me-2"></i>
+            ¿Necesitas ayuda urgente?
+          </h6>
+          <p class="card-text text-muted mb-2">
+            Si este error te impide realizar algo importante, no dudes en contactarnos:
+          </p>
+          <a href="{{ url_for('main.contacto') }}" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-envelope-fill me-2"></i>Contactar soporte
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Auto-recarga cada 30 segundos en caso de error 500
+setTimeout(function() {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = 'alert alert-info alert-dismissible fade show mt-3';
+  alertDiv.innerHTML = `
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <strong>Reintentando automáticamente...</strong> La página se recargará en unos segundos.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  document.querySelector('.container').appendChild(alertDiv);
+  
+  setTimeout(() => location.reload(), 5000);
+}, 25000);
+</script>
+{% endblock %}

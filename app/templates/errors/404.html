@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Error 404 - Página No Encontrada{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="text-center">
+      <!-- Ícono de error -->
+      <div class="mb-4">
+        <i class="bi bi-search text-info" style="font-size: 5rem;"></i>
+      </div>
+      
+      <!-- Título del error -->
+      <h1 class="titulo-profesional text-info mb-3">Error 404</h1>
+      <h2 class="h4 mb-4">Página No Encontrada</h2>
+      
+      <!-- Mensaje explicativo -->
+      <div class="alert alert-info" role="alert">
+        <h5 class="alert-heading">
+          <i class="bi bi-question-circle-fill me-2"></i>
+          ¿Dónde está esa página?
+        </h5>
+        <p class="mb-0">
+          La página que buscas no existe o ha sido movida. Es posible que la URL esté incorrecta 
+          o que el contenido haya sido eliminado o reorganizado.
+        </p>
+      </div>
+      
+      <!-- Sugerencias -->
+      <div class="card border-info mb-4">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-lightbulb-fill text-info me-2"></i>
+            Qué puedes hacer:
+          </h6>
+          <ul class="list-unstyled mb-0">
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Verificar que la URL esté escrita correctamente</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Usar el menú de navegación para encontrar lo que buscas</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Regresar a la página principal</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Enlaces útiles -->
+      <div class="row mb-4">
+        <div class="col-md-6 mb-2">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <i class="bi bi-house-fill text-primary mb-2" style="font-size: 2rem;"></i>
+              <h6 class="card-title">Página Principal</h6>
+              <a href="{{ url_for('main.home') }}" class="btn btn-sm btn-outline-primary">Ir al inicio</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <i class="bi bi-journal-text text-primary mb-2" style="font-size: 2rem;"></i>
+              <h6 class="card-title">Blog</h6>
+              <a href="{{ url_for('admin.blog') }}" class="btn btn-sm btn-outline-primary">Ver blog</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botones de acción -->
+      <div class="d-flex justify-content-center gap-3">
+        <a href="javascript:history.back()" class="btn btn-outline-info">
+          <i class="bi bi-arrow-left me-2"></i>Volver atrás
+        </a>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+          <i class="bi bi-house-fill me-2"></i>Ir al inicio
+        </a>
+      </div>
+      
+      <!-- Información de contacto -->
+      <div class="mt-4 text-muted">
+        <small>
+          ¿No encuentras lo que buscas? 
+          <a href="{{ url_for('main.contacto') }}" class="text-decoration-none">Contáctanos</a>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

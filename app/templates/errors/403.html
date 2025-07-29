@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Error 403 - Acceso Prohibido{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="text-center">
+      <!-- Ícono de error -->
+      <div class="mb-4">
+        <i class="bi bi-shield-fill-exclamation text-danger" style="font-size: 5rem;"></i>
+      </div>
+      
+      <!-- Título del error -->
+      <h1 class="titulo-profesional text-danger mb-3">Error 403</h1>
+      <h2 class="h4 mb-4">Acceso Prohibido</h2>
+      
+      <!-- Mensaje explicativo -->
+      <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          No tienes permisos para acceder
+        </h5>
+        <p class="mb-0">
+          Esta página requiere permisos especiales que tu cuenta actual no posee. 
+          Es posible que necesites iniciar sesión o que tu cuenta no tenga los privilegios necesarios.
+        </p>
+      </div>
+      
+      <!-- Sugerencias -->
+      <div class="card border-danger mb-4">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-lightbulb-fill text-danger me-2"></i>
+            Qué puedes hacer:
+          </h6>
+          <ul class="list-unstyled mb-0">
+            {% if not current_user.is_authenticated %}
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>
+              <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Iniciar sesión</a> 
+              con una cuenta válida
+            </li>
+            {% endif %}
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Verificar que tienes los permisos necesarios</li>
+            <li><i class="bi bi-arrow-right text-primary me-2"></i>Contactar al administrador si crees que es un error</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Botones de acción -->
+      <div class="d-flex justify-content-center gap-3">
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-danger">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+        </a>
+        {% endif %}
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+          <i class="bi bi-house-fill me-2"></i>Ir al inicio
+        </a>
+      </div>
+      
+      <!-- Información de contacto -->
+      <div class="mt-4 text-muted">
+        <small>
+          Si crees que esto es un error, 
+          <a href="{{ url_for('main.contacto') }}" class="text-decoration-none">contáctanos</a>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
