@@ -51,17 +51,7 @@ class GeneralData(db.Model):
 
     def __repr__(self):
         return f'<GeneralData {self.circuit_name}>'
-class Circuito(db.Model):
-    __tablename__ = 'circuitos'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    general_data_id = db.Column(db.Integer, db.ForeignKey('general_data.id'), nullable=False)  # referencia dato general base
-    nodo_base_id = db.Column(db.Integer, db.ForeignKey('nodo_data.id'), nullable=False)  # nodo base
 
-    nombre = db.Column(db.String(100), nullable=False)
-
-    general_data = db.relationship('GeneralData', backref='circuitos')
-    nodo_base = db.relationship('NodoData', foreign_keys=[nodo_base_id])
 
     
 class NodoData(db.Model):
