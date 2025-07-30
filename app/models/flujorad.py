@@ -52,7 +52,17 @@ class GeneralData(db.Model):
     def __repr__(self):
         return f'<GeneralData {self.circuit_name}>'
 
+class Circuito(db.Model):
+    __tablename__ = 'circuitos'
 
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Circuito {self.nombre}>"
     
 class NodoData(db.Model):
     __tablename__ = 'nodo_data'
