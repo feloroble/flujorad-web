@@ -39,4 +39,26 @@ def contacto():
 
     return render_template('contacto.html', form=form)
 
+@main_bp.route('/marketing-digital')
+def marketing_digital():
+    return render_template('publico/servicio_1.html')
 
+@main_bp.route('/pagina-web')
+def pagina_web():
+    return render_template('publico/servicio_2.html')
+
+@main_bp.route('/tienda-online')
+def tienda_online():
+    return render_template('publico/servicio_3.html')
+
+@main_bp.route('/automatizacion')
+def automatizacion():
+    return render_template('publico/servicio_4.html')
+
+@main_bp.route('/pos-ventas')
+def pos_ventas():
+    return render_template('publico/servicio_5.html')
+
+@main_bp.route('/mantenimiento')
+def mantenimiento():
+    return render_template('publico/servicio_6.html')

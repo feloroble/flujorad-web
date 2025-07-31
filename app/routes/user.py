@@ -8,7 +8,7 @@ user_bp = Blueprint('user', __name__)
 @user_bp.route('/panel-user')
 def panel_user():
     datos_generales = GeneralData.query.filter_by(user_id=current_user.id).all()
-    circuitos = Circuito.query.filter_by(user_id=current_user.id).all()
+    circuitos = Circuito.query.filter_by(id=current_user.id).all()
     return render_template('user/panel_user.html',
         datos_generales=datos_generales,
         circuitos=circuitos
