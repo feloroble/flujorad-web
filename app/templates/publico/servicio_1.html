@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% block title %}Túneles de Venta - Tecno Tactil{% endblock %}
+{% block content %}
+
+<style>
+  :root {
+    --primary-blue: #0066cc;
+    --light-blue: #4d94ff;
+    --dark-blue: #003d7a;
+    --gradient-blue: linear-gradient(135deg, #0066cc 0%, #4d94ff 100%);
+  }
+
+  .service-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 100px 0 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-diagram-3-fill service-icon-large"></i>
+    <h1 class="service-title">Túneles de Venta</h1>
+    <p class="service-subtitle">Automatiza tu proceso comercial y convierte más clientes con embudos estratégicos</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué son los Túneles de Venta? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-question-circle-fill"></i>
+      ¿Qué son los Túneles de Venta?
+    </h2>
+    <div class="section-content">
+      <p>Los túneles de venta son sistemas automatizados que guían a tus clientes potenciales a través de un proceso estructurado, desde el primer contacto hasta la compra final. Son como un embudo que filtra y nutre a tus prospectos, aumentando significativamente tus tasas de conversión.</p>
+      
+      <p>En Tecno T@ctil, diseñamos túneles de venta personalizados que no solo capturan leads, sino que los educan, construyen confianza y los motivan a tomar acción. Cada túnel está optimizado para tu audiencia específica y objetivos comerciales.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop" alt="Túneles de Venta" class="service-image">
+    </div>
+  </div>
+
+  <!-- Características y Beneficios -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-star-fill"></i>
+      Características de Nuestros Túneles
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-funnel-fill feature-icon"></i>
+        <h3 class="feature-title">Diseño Estratégico</h3>
+        <p class="feature-text">Cada etapa del túnel está diseñada con un propósito específico para maximizar la conversión.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-robot feature-icon"></i>
+        <h3 class="feature-title">Automatización Completa</h3>
+        <p class="feature-text">Emails, seguimientos y nutrición de leads completamente automatizados las 24/7.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-graph-up-arrow feature-icon"></i>
+        <h3 class="feature-title">Análisis y Optimización</h3>
+        <p class="feature-text">Monitoreo constante del rendimiento con métricas claras y optimización continua.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-people-fill feature-icon"></i>
+        <h3 class="feature-title">Segmentación Avanzada</h3>
+        <p class="feature-text">Personalización del mensaje según el comportamiento y perfil de cada lead.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-lightning-charge-fill feature-icon"></i>
+        <h3 class="feature-title">Implementación Rápida</h3>
+        <p class="feature-text">Túneles funcionales en tiempo record sin comprometer la calidad estratégica.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-shield-check-fill feature-icon"></i>
+        <h3 class="feature-title">Soporte Continuo</h3>
+        <p class="feature-text">Acompañamiento post-implementación para garantizar resultados óptimos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proceso de Trabajo -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-gear-fill"></i>
+      Nuestro Proceso de Trabajo
+    </h2>
+    <div class="section-content">
+      <p><strong>1. Análisis Inicial:</strong> Estudiamos tu negocio, audiencia y objetivos para diseñar la estrategia perfecta.</p>
+      
+      <p><strong>2. Diseño del Embudo:</strong> Creamos el mapa del túnel con cada touchpoint y mensaje optimizado.</p>
+      
+      <p><strong>3. Desarrollo Técnico:</strong> Implementamos todas las herramientas tecnológicas necesarias para la automatización.</p>
+      
+      <p><strong>4. Testing y Optimización:</strong> Probamos cada elemento y optimizamos basándonos en datos reales.</p>
+      
+      <p><strong>5. Lanzamiento y Monitoreo:</strong> Ponemos en marcha tu túnel y monitoreamos su rendimiento continuamente.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" alt="Proceso de Trabajo" class="service-image">
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="cta-section">
+    <h2 class="cta-title">¿Listo para Automatizar tus Ventas?</h2>
+    <p class="cta-text">Déjanos diseñar un túnel de venta que trabaje por ti las 24 horas del día</p>
+    <a href="#contacto" class="cta-button">Solicitar Consultoría Gratuita</a>
+  </div>
+
+</div>
+
+{% endblock %}
