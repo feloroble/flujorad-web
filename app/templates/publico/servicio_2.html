@@ -1,7 +1,336 @@
-{% extends "base.html" %}
-{% block title %}Diseño Web Profesional{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Administración de Redes - Tecno Tactil{% endblock %}
 {% block content %}
-<h1>Página Web</h1>
-<p>Tu carta de presentación online, optimizada y atractiva.</p>
-<img src="{{ url_for('static', filename='images/web.jpg') }}" alt="Diseño Web">
-{% endblock %}
+
+<style>
+  
+
+  .service-hero {
+    
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(3, 8, 88, 0.623);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(17, 20, 197, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-hdd-network-fill service-icon-large"></i>
+    <h1 class="service-title">Administración de Redes</h1>
+    <p class="service-subtitle">Infraestructura de red segura, escalable y optimizada para tu empresa</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué es la Administración de Redes? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-router-fill"></i>
+      ¿Qué es la Administración de Redes?
+    </h2>
+    <div class="section-content">
+      <p>La administración de redes es el conjunto de procesos, herramientas y técnicas utilizadas para diseñar, implementar, monitorear y mantener la infraestructura de comunicaciones de una organización. Es el corazón tecnológico que conecta todos los elementos de tu empresa.</p>
+      
+      <p>En Tecno T@ctil, nos especializamos en crear redes empresariales robustas que no solo conectan dispositivos, sino que potencian la productividad, garantizan la seguridad de los datos y se adaptan al crecimiento de tu negocio. Nuestro enfoque va más allá de la simple conectividad: creamos ecosistemas digitales inteligentes.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop" alt="Administración de Redes" class="service-image">
+    </div>
+  </div>
+
+  <!-- Servicios de Red -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-diagram-3-fill"></i>
+      Nuestros Servicios de Red
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-gear-wide-connected feature-icon"></i>
+        <h3 class="feature-title">Diseño de Arquitectura</h3>
+        <p class="feature-text">Planificación completa de la topología de red optimizada para tus necesidades específicas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-shield-lock-fill feature-icon"></i>
+        <h3 class="feature-title">Seguridad de Red</h3>
+        <p class="feature-text">Implementación de firewalls, VPN, y protocolos de seguridad avanzados para proteger tu información.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-speedometer2 feature-icon"></i>
+        <h3 class="feature-title">Optimización de Rendimiento</h3>
+        <p class="feature-text">Monitoreo continuo y ajustes para garantizar el máximo rendimiento de tu red.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-cloud-arrow-up-fill feature-icon"></i>
+        <h3 class="feature-title">Integración Cloud</h3>
+        <p class="feature-text">Conexión seamless entre tu infraestructura local y servicios en la nube.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-headset feature-icon"></i>
+        <h3 class="feature-title">Soporte 24/7</h3>
+        <p class="feature-text">Monitoreo proactivo y soporte técnico especializado las 24 horas del día.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-arrow-up-right-circle-fill feature-icon"></i>
+        <h3 class="feature-title">Escalabilidad</h3>
+        <p class="feature-text">Redes diseñadas para crecer con tu empresa sin comprometer el rendimiento.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tecnologías que Manejamos -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-cpu-fill"></i>
+      Tecnologías que Dominamos
+    </h2>
+    <div class="section-content">
+      <p><strong>Equipos de Red:</strong> Cisco, Mikrotik, Ubiquiti, HP, Dell, Fortinet - Configuración y optimización de switches, routers y access points empresariales.</p>
+      
+      <p><strong>Protocolos de Red:</strong> TCP/IP, VLAN, VPN, MPLS, BGP, OSPF - Implementación de protocolos avanzados para redes complejas.</p>
+      
+      <p><strong>Seguridad:</strong> Firewalls de nueva generación, IDS/IPS, gestión de certificados SSL, autenticación 802.1X.</p>
+      
+      <p><strong>Monitoreo:</strong> SNMP, Nagios, SolarWinds, PRTG - Herramientas de monitoreo proactivo para detectar problemas antes de que afecten a los usuarios.</p>
+      
+      <p><strong>Virtualización:</strong> VMware, Hyper-V, redes definidas por software (SDN) para máxima flexibilidad.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&h=400&fit=crop" alt="Tecnologías de Red" class="service-image">
+    </div>
+  </div>
+
+  <!-- Proceso de Implementación -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-list-check feature-icon"></i>
+      Proceso de Implementación
+    </h2>
+    <div class="section-content">
+      <p><strong>1. Auditoría de Red Actual:</strong> Evaluamos tu infraestructura existente y identificamos áreas de mejora.</p>
+      
+      <p><strong>2. Diseño Personalizado:</strong> Creamos un diseño de red adaptado a tus necesidades específicas y planes de crecimiento.</p>
+      
+      <p><strong>3. Implementación Gradual:</strong> Instalamos y configuramos el nuevo equipamiento minimizando interrupciones.</p>
+      
+      <p><strong>4. Testing y Validación:</strong> Realizamos pruebas exhaustivas de rendimiento, seguridad y disponibilidad.</p>
+      
+      <p><strong>5. Capacitación del Personal:</strong> Entrenamos a tu equipo en el uso y mantenimiento básico de la nueva infraestructura.</p>
+    </div>
+  </div>
+</div>
+
+
+      {% endblock %}

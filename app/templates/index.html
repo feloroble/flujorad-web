@@ -24,15 +24,7 @@
         }
 
         /* Hero Section con gradiente */
-        .hero-section {
-            background: linear-gradient(135deg, #e7e7eb 0%, #bfdee6 100%);
-            color: rgb(17, 7, 59);
-            padding: 120px 0 80px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            min-height: 400px;
-        }
+        
 
         .hero-section::before {
             content: '';
@@ -508,7 +500,7 @@
             </a>
 
             <!-- Servicio 2 -->
-            <a href="administracion-redes.html" class="service-card">
+            <a href="{{ url_for('main.pagina_web') }}" class="service-card">
                 <div class="text-center">
                     <i class="bi bi-hdd-network-fill service-icon"></i>
                     <h5 class="service-title">Administración de Redes</h5>
@@ -520,7 +512,7 @@
             </a>
 
             <!-- Servicio 3 -->
-            <a href="infraestructura-tecnologica.html" class="service-card">
+            <a href="{{ url_for('main.tienda_online') }}" class="service-card">
                 <div class="text-center">
                     <i class="bi bi-cpu-fill service-icon"></i>
                     <h5 class="service-title">Infraestructura Tecnológica</h5>
@@ -532,7 +524,7 @@
             </a>
 
             <!-- Servicio 4 -->
-            <a href="optimizacion-ventas.html" class="service-card">
+            <a href="{{ url_for('main.automatizacion') }}" class="service-card">
                 <div class="text-center">
                     <i class="bi bi-bar-chart-line-fill service-icon"></i>
                     <h5 class="service-title">Optimización y Análisis de Ventas</h5>
@@ -544,7 +536,7 @@
             </a>
 
             <!-- Servicio 5 -->
-            <a href="automatizacion-procesos.html" class="service-card">
+            <a href="{{ url_for('main.pos_ventas') }}" class="service-card">
                 <div class="text-center">
                     <i class="bi bi-robot service-icon"></i>
                     <h5 class="service-title">Automatización de Procesos</h5>
@@ -556,7 +548,7 @@
             </a>
 
             <!-- Servicio 6 -->
-            <a href="mentoria-capacitacion.html" class="service-card">
+            <a href="{{ url_for('main.mantenimiento') }}" class="service-card">
                 <div class="text-center">
                     <i class="bi bi-person-video3 service-icon"></i>
                     <h5 class="service-title">Mentoría y Capacitación</h5>

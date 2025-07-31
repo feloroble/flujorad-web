@@ -1,7 +1,352 @@
-{% extends "base.html" %}
-{% block title %}Tienda Online{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Infraestructura Tecnológica - Tecno Tactil{% endblock %}
 {% block content %}
-<h1>Tienda Online</h1>
-<p>Vende tus productos las 24 horas con pasarelas integradas.</p>
-<img src="{{ url_for('static', filename='images/tienda.jpg') }}" alt="Tienda Online">
+
+<style>
+  :root {
+    --primary-blue: #0066cc;
+    --light-blue: #4d94ff;
+    --dark-blue: #003d7a;
+    --gradient-blue: linear-gradient(135deg, #0066cc 0%, #4d94ff 100%);
+  }
+
+  .service-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 100px 0 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-cpu-fill service-icon-large"></i>
+    <h1 class="service-title">Infraestructura Tecnológica</h1>
+    <p class="service-subtitle">Soluciones tecnológicas completas adaptadas a las necesidades de tu negocio</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué es la Infraestructura Tecnológica? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-building-gear"></i>
+      ¿Qué es la Infraestructura Tecnológica?
+    </h2>
+    <div class="section-content">
+      <p>La infraestructura tecnológica es el conjunto de componentes de hardware, software, redes y servicios que proporcionan la base para las operaciones de TI de una organización. Es el fundamento digital sobre el cual tu empresa construye su competitividad y eficiencia operativa.</p>
+      
+      <p>En Tecno T@ctil, diseñamos y implementamos infraestructuras tecnológicas integrales que no solo satisfacen las necesidades actuales de tu empresa, sino que se anticipan al crecimiento futuro. Desde servidores y sistemas de almacenamiento hasta soluciones de virtualización y cloud computing, creamos ecosistemas tecnológicos robustos y escalables.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop" alt="Infraestructura Tecnológica" class="service-image">
+    </div>
+  </div>
+
+  <!-- Componentes de Infraestructura -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-diagram-2-fill"></i>
+      Componentes de Nuestra Infraestructura
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-server feature-icon"></i>
+        <h3 class="feature-title">Servidores y Datacenter</h3>
+        <p class="feature-text">Implementación de servidores físicos y virtuales con alta disponibilidad y rendimiento optimizado.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-hdd-stack-fill feature-icon"></i>
+        <h3 class="feature-title">Sistemas de Almacenamiento</h3>
+        <p class="feature-text">Soluciones SAN, NAS y almacenamiento en la nube con backup automático y recuperación ante desastres.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-cloud-fill feature-icon"></i>
+        <h3 class="feature-title">Virtualización y Cloud</h3>
+        <p class="feature-text">Migración a entornos virtualizados y soluciones híbridas cloud para máxima flexibilidad.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-shield-shaded feature-icon"></i>
+        <h3 class="feature-title">Seguridad Integral</h3>
+        <p class="feature-text">Implementación de múltiples capas de seguridad desde el hardware hasta las aplicaciones.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-speedometer feature-icon"></i>
+        <h3 class="feature-title">Monitoreo y Performance</h3>
+        <p class="feature-text">Sistemas de monitoreo en tiempo real con alertas proactivas y optimización continua.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-arrow-repeat feature-icon"></i>
+        <h3 class="feature-title">Backup y Continuidad</h3>
+        <p class="feature-text">Estrategias completas de respaldo y planes de continuidad de negocio probados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tecnologías y Plataformas -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-gear-wide-connected"></i>
+      Tecnologías y Plataformas
+    </h2>
+    <div class="section-content">
+      <p><strong>Virtualización:</strong> VMware vSphere, Microsoft Hyper-V, KVM - Creamos entornos virtualizados eficientes que maximizan el uso de recursos.</p>
+      
+      <p><strong>Cloud Computing:</strong> AWS, Microsoft Azure, Google Cloud Platform - Implementamos soluciones híbridas que combinan lo mejor del cloud público y privado.</p>
+      
+      <p><strong>Contenedores:</strong> Docker, Kubernetes, OpenShift - Modernizamos aplicaciones con tecnologías de contenedores para mayor agilidad.</p>
+      
+      <p><strong>Automatización:</strong> Ansible, Terraform, PowerShell - Automatizamos tareas repetitivas para reducir errores y aumentar eficiencia.</p>
+      
+      <p><strong>Bases de Datos:</strong> SQL Server, Oracle, MySQL, PostgreSQL, MongoDB - Diseñamos y optimizamos sistemas de bases de datos escalables.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop" alt="Tecnologías Modernas" class="service-image">
+    </div>
+  </div>
+
+  <!-- Metodología de Implementación -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-clipboard-check-fill"></i>
+      Metodología de Implementación
+    </h2>
+    <div class="section-content">
+      <p><strong>1. Análisis de Necesidades:</strong> Evaluamos los requerimientos actuales y futuros de tu organización.</p>
+      
+      <p><strong>2. Diseño de Arquitectura:</strong> Creamos un blueprint detallado de la infraestructura óptima para tu negocio.</p>
+      
+      <p><strong>3. Planificación de Migración:</strong> Desarrollamos un plan detallado de migración con mínimo impacto operativo.</p>
+      
+      <p><strong>4. Implementación por Fases:</strong> Ejecutamos la implementación de manera gradual y controlada.</p>
+      
+      <p><strong>5. Testing y Optimización:</strong> Realizamos pruebas exhaustivas y optimizamos el rendimiento del sistema.</p>
+      
+      <p><strong>6. Documentación y Capacitación:</strong> Entregamos documentación completa y capacitamos a tu equipo técnico.</p>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="cta-section">
+    <h2 class="cta-title">¿Listo para Modernizar tu Infraestructura?</h2>
+    <p class="cta-text">Construyamos juntos la base tecnológica que impulse el crecimiento de tu empresa</p>
+    <a href="#contacto" class="cta-button">Solicitar Evaluación Técnica</a>
+  </div>
+
+</div>
+
 {% endblock %}

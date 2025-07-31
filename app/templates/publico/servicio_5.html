@@ -1,7 +1,417 @@
-{% extends "base.html" %}
-{% block title %}Sistema POS Ventas{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Automatización de Procesos - Tecno Tactil{% endblock %}
 {% block content %}
-<h1>Punto de Venta</h1>
-<p>Gestiona ventas, inventario y clientes desde una sola plataforma.</p>
-<img src="{{ url_for('static', filename='images/pos.jpg') }}" alt="Punto de Venta">
+
+<style>
+  :root {
+    --primary-blue: #0066cc;
+    --light-blue: #4d94ff;
+    --dark-blue: #003d7a;
+    --gradient-blue: linear-gradient(135deg, #0066cc 0%, #4d94ff 100%);
+  }
+
+  .service-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 100px 0 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .benefits-section {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 3rem;
+    border-radius: 20px;
+    margin: 3rem 0;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .benefit-item {
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .benefit-icon {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .benefit-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .benefit-text {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-robot service-icon-large"></i>
+    <h1 class="service-title">Automatización de Procesos</h1>
+    <p class="service-subtitle">Libera tiempo valioso automatizando tareas repetitivas y aumenta la productividad</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué es la Automatización de Procesos? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-gear-wide-connected"></i>
+      ¿Qué es la Automatización de Procesos?
+    </h2>
+    <div class="section-content">
+      <p>La automatización de procesos es la implementación de tecnología para ejecutar tareas repetitivas sin intervención humana, permitiendo que tu equipo se enfoque en actividades de mayor valor estratégico. Va desde simples automatizaciones de email hasta complejos workflows que integran múltiples sistemas empresariales.</p>
+      
+      <p>En Tecno T@ctil, identificamos oportunidades de automatización en todos los aspectos de tu negocio: marketing, ventas, atención al cliente, recursos humanos, finanzas y operaciones. Diseñamos e implementamos soluciones que no solo ahorran tiempo, sino que también reducen errores, mejoran la consistencia y escalan con tu crecimiento empresarial.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop" alt="Automatización de Procesos" class="service-image">
+    </div>
+  </div>
+
+  <!-- Beneficios de la Automatización -->
+  <div class="benefits-section">
+    <h3 style="color: var(--primary-blue); font-size: 2rem; text-align: center; margin-bottom: 1rem;">Beneficios de la Automatización</h3>
+    <p style="color: #666; text-align: center; margin-bottom: 2rem;">Transforma tu operación con automatización inteligente</p>
+    
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <i class="bi bi-clock-fill benefit-icon"></i>
+        <h4 class="benefit-title">Ahorro de Tiempo</h4>
+        <p class="benefit-text">Hasta 80% menos tiempo en tareas repetitivas</p>
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-shield-check benefit-icon"></i>
+        <h4 class="benefit-title">Reducción de Errores</h4>
+        <p class="benefit-text">Eliminación de errores humanos en procesos críticos</p>
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-graph-up benefit-icon"></i>
+        <h4 class="benefit-title">Mayor Productividad</h4>
+        <p class="benefit-text">Equipos enfocados en tareas estratégicas</p>
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-cash-coin benefit-icon"></i>
+        <h4 class="benefit-title">Reducción de Costos</h4>
+        <p class="benefit-text">Menor necesidad de recursos para tareas operativas</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Áreas de Automatización -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-diagram-2-fill"></i>
+      Áreas de Automatización
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-envelope-at-fill feature-icon"></i>
+        <h3 class="feature-title">Marketing Digital</h3>
+        <p class="feature-text">Campañas de email, segmentación de audiencias, nurturing de leads y reportes automáticos.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-person-check-fill feature-icon"></i>
+        <h3 class="feature-title">Gestión de Clientes</h3>
+        <p class="feature-text">Seguimiento de leads, asignación automática, recordatorios y actualizaciones de CRM.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-receipt feature-icon"></i>
+        <h3 class="feature-title">Procesos Financieros</h3>
+        <p class="feature-text">Facturación automática, conciliación bancaria, reportes financieros y seguimiento de pagos.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-people-fill feature-icon"></i>
+        <h3 class="feature-title">Recursos Humanos</h3>
+        <p class="feature-text">Onboarding de empleados, gestión de vacaciones, evaluaciones y comunicaciones internas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-cart-check-fill feature-icon"></i>
+        <h3 class="feature-title">E-commerce</h3>
+        <p class="feature-text">Gestión de inventario, procesamiento de órdenes, seguimiento de envíos y atención post-venta.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-headset feature-icon"></i>
+        <h3 class="feature-title">Atención al Cliente</h3>
+        <p class="feature-text">Chatbots inteligentes, tickets automáticos, escalamiento y encuestas de satisfacción.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Herramientas de Automatización -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-tools"></i>
+      Herramientas de Automatización
+    </h2>
+    <div class="section-content">
+      <p><strong>Automatización de Marketing:</strong> HubSpot, Mailchimp, ActiveCampaign, Pardot - Campañas inteligentes que nutren leads automáticamente.</p>
+      
+      <p><strong>Workflow Automation:</strong> Zapier, Microsoft Power Automate, n8n - Conectamos aplicaciones y automatizamos flujos de trabajo complejos.</p>
+      
+      <p><strong>RPA (Robotic Process Automation):</strong> UiPath, Blue Prism, Automation Anywhere - Bots que ejecutan tareas en interfaces de usuario.</p>
+      
+      <p><strong>Chatbots e IA:</strong> ManyChat, Dialogflow, Microsoft Bot Framework - Automatización inteligente de atención al cliente.</p>
+      
+      <p><strong>Integración de APIs:</strong> Desarrollo custom para conectar sistemas propietarios y crear automatizaciones específicas.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" alt="Herramientas de Automatización" class="service-image">
+    </div>
+  </div>
+
+  <!-- Proceso de Implementación -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-list-ol"></i>
+      Proceso de Implementación
+    </h2>
+    <div class="section-content">
+      <p><strong>1. Análisis de Procesos:</strong> Mapeamos tus procesos actuales e identificamos oportunidades de automatización.</p>
+      
+      <p><strong>2. Priorización de Iniciativas:</strong> Evaluamos el impacto vs. esfuerzo para determinar qué automatizar primero.</p>
+      
+      <p><strong>3. Diseño de Solución:</strong> Creamos el blueprint técnico de la automatización y definimos flujos de trabajo.</p>
+      
+      <p><strong>4. Desarrollo e Integración:</strong> Implementamos las automatizaciones y las integramos con tus sistemas existentes.</p>
+      
+      <p><strong>5. Testing y Validación:</strong> Probamos exhaustivamente antes del despliegue en producción.</p>
+      
+      <p><strong>6. Capacitación y Soporte:</strong> Entrenamos a tu equipo y proporcionamos soporte continuo para optimizaciones.</p>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="cta-section">
+    <h2 class="cta-title">¿Listo para Automatizar tu Negocio?</h2>
+    <p class="cta-text">Descubre qué procesos puedes automatizar y libera el potencial de tu equipo</p>
+    <a href="#contacto" class="cta-button">Solicitar Evaluación de Procesos</a>
+  </div>
+
+</div>
+
 {% endblock %}

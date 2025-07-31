@@ -1,7 +1,356 @@
-{% extends "base.html" %}
-{% block title %}Automatización de Procesos{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Optimización y Análisis de Ventas - Tecno Tactil{% endblock %}
 {% block content %}
-<h1>Automatización</h1>
-<p>Conecta tus sistemas, reduce tareas manuales y gana eficiencia.</p>
-<img src="{{ url_for('static', filename='images/automatizacion.jpg') }}" alt="Automatización">
+
+<style>
+  :root {
+    --primary-blue: #0066cc;
+    --light-blue: #4d94ff;
+    --dark-blue: #003d7a;
+    --gradient-blue: linear-gradient(135deg, #0066cc 0%, #4d94ff 100%);
+  }
+
+  .service-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 100px 0 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .stats-section {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 3rem;
+    border-radius: 20px;
+    margin: 3rem 0;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .stat-item {
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    display: block;
+  }
+
+  .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-bar-chart-line-fill service-icon-large"></i>
+    <h1 class="service-title">Optimización de Ventas</h1>
+    <p class="service-subtitle">Análisis de datos para maximizar conversiones y aumentar el ROI</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué es la Optimización de Ventas? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-graph-up-arrow"></i>
+      ¿Qué es la Optimización de Ventas?
+    </h2>
+    <div class="section-content">
+      <p>La optimización de ventas es el proceso sistemático de analizar, mejorar y automatizar cada aspecto de tu proceso comercial para maximizar la conversión de prospectos en clientes y aumentar el valor de vida del cliente (CLV). Va más allá de simplemente generar más leads: se trata de convertir mejor.</p>
+      
+      <p>En Tecno T@ctil, utilizamos metodologías basadas en datos para identificar cuellos de botella en tu embudo de ventas, optimizar cada punto de contacto con el cliente y implementar sistemas de seguimiento que te permitan tomar decisiones informadas. Nuestro enfoque combina análisis cuantitativo con insights cualitativos para crear estrategias de ventas verdaderamente efectivas.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" alt="Optimización de Ventas" class="service-image">
+    </div>
+  </div>
+
+  <!-- Estadísticas de Impacto -->
+  <div class="stats-section">
+    <h3 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 1rem;">Resultados que Generamos</h3>
+    <p style="color: #666; margin-bottom: 2rem;">Mejoras promedio que nuestros clientes experimentan tras implementar nuestras estrategias</p>
+    
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">+40%</span>
+        <div class="stat-label">Aumento en tasa de conversión</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">+65%</span>
+        <div class="stat-label">Mejora en ROI de marketing</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">-30%</span>
+        <div class="stat-label">Reducción en costo por adquisición</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">+50%</span>
+        <div class="stat-label">Incremento en valor de vida del cliente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Servicios de Optimización -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-tools"></i>
+      Nuestros Servicios de Optimización
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-funnel feature-icon"></i>
+        <h3 class="feature-title">Análisis de Embudo</h3>
+        <p class="feature-text">Identificamos dónde pierdes clientes potenciales y optimizamos cada etapa del proceso de ventas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-graph-down-arrow feature-icon"></i>
+        <h3 class="feature-title">A/B Testing</h3>
+        <p class="feature-text">Probamos diferentes versiones de tus páginas y mensajes para encontrar las combinaciones más efectivas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-person-lines-fill feature-icon"></i>
+        <h3 class="feature-title">Segmentación de Audiencias</h3>
+        <p class="feature-text">Creamos perfiles detallados de clientes para personalizar el mensaje y aumentar la relevancia.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-clipboard-data feature-icon"></i>
+        <h3 class="feature-title">Analytics Avanzado</h3>
+        <p class="feature-text">Implementamos sistemas de tracking completos para medir cada interacción y su impacto en ventas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-arrow-clockwise feature-icon"></i>
+        <h3 class="feature-title">Automatización de Seguimiento</h3>
+        <p class="feature-text">Creamos secuencias automáticas que nutren a los leads hasta convertirlos en clientes.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-trophy-fill feature-icon"></i>
+        <h3 class="feature-title">Optimización de Conversión</h3>
+        <p class="feature-text">Mejoramos páginas de destino, formularios y llamadas a la acción para maximizar conversiones.</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

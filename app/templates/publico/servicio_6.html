@@ -1,7 +1,476 @@
-{% extends "base.html" %}
-{% block title %}Mantenimiento y Soporte{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Mentoría y Capacitación - Tecno Tactil{% endblock %}
 {% block content %}
-<h1>Mantenimiento</h1>
-<p>Tu sistema siempre en marcha con nuestro soporte técnico y actualizaciones.</p>
-<img src="{{ url_for('static', filename='images/mantenimiento.jpg') }}" alt="Mantenimiento">
+
+<style>
+  :root {
+    --primary-blue: #0066cc;
+    --light-blue: #4d94ff;
+    --dark-blue: #003d7a;
+    --gradient-blue: linear-gradient(135deg, #0066cc 0%, #4d94ff 100%);
+  }
+
+  .service-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 100px 0 60px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 1000,0 1000,100"/></svg>');
+    background-size: cover;
+  }
+
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .service-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+
+  .service-icon-large {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .content-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .section-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-content {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: #444;
+    text-align: justify;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+
+  .feature-item {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    color: var(--dark-blue);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .image-container {
+    text-align: center;
+    margin: 3rem 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 102, 204, 0.2);
+  }
+
+  .service-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .service-image:hover {
+    transform: scale(1.02);
+  }
+
+  .programs-section {
+    background: linear-gradient(135deg, #f8faff 0%, #e6f2ff 100%);
+    padding: 3rem;
+    border-radius: 20px;
+    margin: 3rem 0;
+  }
+
+  .program-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0, 102, 204, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .program-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.15);
+  }
+
+  .program-title {
+    color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .program-duration {
+    background: var(--light-blue);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .program-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .program-topics {
+    list-style: none;
+    padding: 0;
+  }
+
+  .program-topics li {
+    color: #555;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .program-topics li::before {
+    content: '✓';
+    color: var(--primary-blue);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+  }
+
+  .cta-section {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 25px;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-button {
+    background: white;
+    color: var(--primary-blue);
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .content-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .feature-item {
+      padding: 1.5rem;
+    }
+    
+    .program-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="service-hero">
+  <div class="service-hero-content">
+    <i class="bi bi-person-video3 service-icon-large"></i>
+    <h1 class="service-title">Mentoría y Capacitación</h1>
+    <p class="service-subtitle">Formación personalizada para dominar la tecnología y las ventas digitales</p>
+  </div>
+</div>
+
+<!-- Contenido Principal -->
+<div class="container content-section">
+  
+  <!-- ¿Qué es la Mentoría Tecnológica? -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-mortarboard-fill"></i>
+      ¿Qué es la Mentoría Tecnológica?
+    </h2>
+    <div class="section-content">
+      <p>La mentoría tecnológica es un proceso de acompañamiento personalizado donde compartimos conocimiento, experiencia y estrategias prácticas para que emprendedores y profesionales puedan dominar las herramientas digitales y metodologías necesarias para hacer crecer sus negocios.</p>
+      
+      <p>En Tecno T@ctil, no solo enseñamos tecnología, sino que la convertimos en una ventaja competitiva real. Nuestros programas combinan teoría sólida con aplicación práctica, mentorías uno a uno y seguimiento continuo para garantizar que realmente implementes lo aprendido y obtengas resultados medibles en tu negocio.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop" alt="Mentoría y Capacitación" class="service-image">
+    </div>
+  </div>
+
+  <!-- Modalidades de Capacitación -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-collection-play-fill"></i>
+      Modalidades de Capacitación
+    </h2>
+    
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="bi bi-person-video feature-icon"></i>
+        <h3 class="feature-title">Mentoría 1:1</h3>
+        <p class="feature-text">Sesiones personalizadas enfocadas en tus necesidades específicas y objetivos de negocio.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-people-fill feature-icon"></i>
+        <h3 class="feature-title">Capacitación Grupal</h3>
+        <p class="feature-text">Talleres prácticos para equipos con dinámicas colaborativas y casos de estudio reales.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-laptop feature-icon"></i>
+        <h3 class="feature-title">Cursos Online</h3>
+        <p class="feature-text">Programas estructurados con acceso 24/7, videos HD y materiales descargables.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-building feature-icon"></i>
+        <h3 class="feature-title">Capacitación In-House</h3>
+        <p class="feature-text">Formación presencial en tu empresa, adaptada a tus procesos y herramientas específicas.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-calendar-week feature-icon"></i>
+        <h3 class="feature-title">Bootcamps Intensivos</h3>
+        <p class="feature-text">Programas intensivos de 2-5 días para dominar temas específicos rápidamente.</p>
+      </div>
+      
+      <div class="feature-item">
+        <i class="bi bi-chat-dots-fill feature-icon"></i>
+        <h3 class="feature-title">Asesoría Continua</h3>
+        <p class="feature-text">Soporte permanente vía WhatsApp, email y videollamadas para resolver dudas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Programas de Capacitación -->
+  <div class="programs-section">
+    <h3 style="color: var(--primary-blue); font-size: 2rem; text-align: center; margin-bottom: 2rem;">Nuestros Programas</h3>
+    
+    <div class="program-card">
+      <div class="program-title">
+        <i class="bi bi-funnel-fill"></i>
+        Máster en Túneles de Venta
+        <span class="program-duration">8 semanas</span>
+      </div>
+      <p class="program-description">Domina el arte de crear embudos de venta que convierten, desde la estrategia hasta la implementación técnica.</p>
+      <ul class="program-topics">
+        <li>Psicología del consumidor y buyer personas</li>
+        <li>Diseño de embudos multi-etapa</li>
+        <li>Copywriting persuasivo y call-to-actions</li>
+        <li>Automatización con herramientas profesionales</li>
+        <li>A/B testing y optimización continua</li>
+        <li>Métricas y análisis de rendimiento</li>
+      </ul>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">
+        <i class="bi bi-graph-up-arrow"></i>
+        Marketing Digital para Emprendedores
+        <span class="program-duration">6 semanas</span>
+      </div>
+      <p class="program-description">Estrategias completas de marketing digital para hacer crecer tu negocio desde cero.</p>
+      <ul class="program-topics">
+        <li>Estrategia de contenido y storytelling</li>
+        <li>Facebook e Instagram Ads avanzado</li>
+        <li>Google Ads y SEO práctico</li>
+        <li>Email marketing automatizado</li>
+        <li>Analytics y métricas de ROI</li>
+        <li>Presupuestos y planificación de campañas</li>
+      </ul>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">
+        <i class="bi bi-robot"></i>
+        Automatización para Pequeñas Empresas
+        <span class="program-duration">4 semanas</span>
+      </div>
+      <p class="program-description">Implementa automatizaciones prácticas que liberen tiempo y aumenten la eficiencia operativa.</p>
+      <ul class="program-topics">
+        <li>Identificación de procesos automatizables</li>
+        <li>Herramientas no-code: Zapier, Integromat</li>
+        <li>Automatización de redes sociales</li>
+        <li>CRM y gestión automatizada de clientes</li>
+        <li>Chatbots para atención al cliente</li>
+        <li>ROI de automatización y escalabilidad</li>
+      </ul>
+    </div>
+
+    <div class="program-card">
+      <div class="program-title">
+        <i class="bi bi-shield-lock"></i>
+        Fundamentos de Redes y Ciberseguridad
+        <span class="program-duration">5 semanas</span>
+      </div>
+      <p class="program-description">Protege tu negocio con conocimientos sólidos en seguridad digital y administración de redes.</p>
+      <ul class="program-topics">
+        <li>Conceptos básicos de redes empresariales</li>
+        <li>Configuración de equipos Mikrotik y Ubiquiti</li>
+        <li>VPN y acceso remoto seguro</li>
+        <li>Backup y recuperación de datos</li>
+        <li>Políticas de seguridad empresarial</li>
+        <li>Monitoreo y mantenimiento preventivo</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Metodología de Enseñanza -->
+  <div class="content-card">
+    <h2 class="section-title">
+      <i class="bi bi-lightbulb-fill"></i>
+      Nuestra Metodología
+    </h2>
+    <div class="section-content">
+      <p><strong>Aprendizaje Práctico:</strong> 70% práctica, 30% teoría. Trabajamos con casos reales y proyectos aplicables inmediatamente.</p>
+      
+      <p><strong>Seguimiento Personalizado:</strong> Cada participante recibe feedback individual y seguimiento de progreso.</p>
+      
+      <p><strong>Comunidad de Aprendizaje:</strong> Acceso a grupo exclusivo para networking y resolución de dudas entre pares.</p>
+      
+      <p><strong>Recursos Actualizados:</strong> Material de estudio constantemente actualizado con las últimas tendencias.</p>
+      
+      <p><strong>Certificación:</strong> Al completar cada programa, recibes un certificado que valida tus nuevas competencias.</p>
+      
+      <p><strong>Soporte Post-Curso:</strong> 3 meses de soporte incluido para resolver dudas en la implementación.</p>
+    </div>
+    
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop" alt="Metodología de Enseñanza" class="service-image">
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="cta-section">
+    <h2 class="cta-title">¿Listo para Acelerar tu Aprendizaje?</h2>
+    <p class="cta-text">Invierte en tu futuro con capacitación que realmente genera resultados</p>
+    <a href="#contacto" class="cta-button">Ver Programas Disponibles</a>
+  </div>
+
+</div>
+
 {% endblock %}
