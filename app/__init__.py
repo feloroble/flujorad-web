@@ -29,7 +29,7 @@ from .extensions import db, migrate, bcrypt, login_manager, csrf
 from .utils.mail import mail
 from .models import register_models
 from .routes import register_routes
-from logs import setup_logging
+
 
 # Cargar variables de entorno
 load_dotenv()
@@ -161,7 +161,7 @@ def init_extensions(app):
         login_manager.init_app(app)
         csrf.init_app(app)
         mail.init_app(app)
-        setup_logging(app)
+        
         print("✅ Extensiones inicializadas correctamente")
     except Exception as e:
         print(f"❌ Error inicializando extensiones: {e}")
