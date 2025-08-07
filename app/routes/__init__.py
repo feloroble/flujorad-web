@@ -4,12 +4,15 @@ from app.utils.activos import MODULOS_ACTIVOS
 
 
 from .auth import auth_bp
+from .mail_tes import bp as bp
 
 
 
 
 def register_routes(app):
     app.register_blueprint(auth_bp)
+    app.register_blueprint(bp)
+
     if 'user'  in MODULOS_ACTIVOS:
         from .user import user_bp
         app.register_blueprint(user_bp)

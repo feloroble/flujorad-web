@@ -1,0 +1,35 @@
+{% extends "emails/base.html" %}
+
+{% block title %}¡Bienvenido a {{ app_name }}!{% endblock %}
+
+{% block content %}
+<h2>¡Hola {{ user_name }}! 👋</h2>
+
+<p>¡Bienvenido a <strong>{{ app_name }}</strong>! Nos alegra tenerte como parte de nuestra comunidad tecnológica.</p>
+
+<p>En nuestra plataforma podrás:</p>
+<ul>
+    <li>📱 Explorar los últimos productos tecnológicos</li>
+    <li>🛒 Realizar compras de forma segura</li>
+    <li>📝 Leer nuestro blog con las últimas tendencias</li>
+    <li>🔧 Acceder a soporte técnico especializado</li>
+</ul>
+
+{% if verification_token %}
+<div class="alert alert-info">
+    <strong>¡Importante!</strong> Para completar tu registro, por favor verifica tu cuenta:
+    <br><br>
+    <a href="{{ verification_url }}" class="btn">Verificar mi cuenta</a>
+    <br><br>
+    <small>Este enlace expirará en 24 horas.</small>
+</div>
+{% else %}
+<p>Tu cuenta ya está activa y lista para usar. ¡Comienza a explorar!</p>
+<a href="{{ base_url }}" class="btn">Ir al sitio web</a>
+{% endif %}
+
+<p>Si tienes alguna pregunta, no dudes en contactarnos. ¡Estamos aquí para ayudarte!</p>
+
+<p>¡Saludos!<br>
+El equipo de {{ app_name }}</p>
+{% endblock %}

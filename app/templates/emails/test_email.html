@@ -1,0 +1,28 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Correo de prueba - {{ app_name }}{% endblock %}
+
+{% block content %}
+<h2>🧪 Correo de prueba</h2>
+
+<p>¡Excelente! Tu configuración de correo está funcionando correctamente.</p>
+
+<div class="alert alert-info">
+    <strong>Detalles de la prueba:</strong>
+    <ul>
+        <li><strong>Fecha y hora:</strong> {{ test_time }}</li>
+        <li><strong>Aplicación:</strong> {{ app_name }} v{{ app_version }}</li>
+        <li><strong>Estado:</strong> ✅ Configuración exitosa</li>
+    </ul>
+</div>
+
+<p>Ahora puedes usar el sistema de correos para:</p>
+<ul>
+    <li>Enviar correos de bienvenida</li>
+    <li>Notificaciones de restablecimiento de contraseña</li>
+    <li>Confirmaciones de pedidos</li>
+    <li>Y mucho más...</li>
+</ul>
+
+<p>¡Tu sistema de correos está listo para usar!</p>
+{% endblock %}

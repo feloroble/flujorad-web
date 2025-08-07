@@ -1,8 +1,11 @@
+import email
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from app.models.user import User
-from app.extensions import db, bcrypt
-from app.utils.mail import enviar_correo_recuperacion, validar_token
+
+from ..utils.mail import EmailService
+from ..models.user import User
+from ..extensions import db, bcrypt
+
 from .forms import LoginForm, RegisterForm, RestablecerPasswordForm, SolicitarRecuperacionForm
 from werkzeug.security import generate_password_hash
 
@@ -24,8 +27,9 @@ def login():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
+    try:
+       form = RegisterForm()
+       if form.validate_on_submit():
         existing_user = User.query.filter_by(email=form.email.data).first()
         if existing_user:
             flash('Este correo ya está registrado')
@@ -33,11 +37,23 @@ def register():
 
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(name=form.name.data, email=form.email.data, password=hashed_password)
+        
         db.session.add(user)
         db.session.commit()
 
-        flash('Usuario creado exitosamente')
+        if EmailService.send_welcome_email(
+            user_email=user.email,
+            user_name=user.name
+            
+        ):
+            flash('Registro exitoso. Revisa tu correo para verificar tu cuenta.', 'success')
+        else:
+            flash('Registro exitoso, pero hubo un problema enviando el correo de confirmación.', 'warning')
         return redirect(url_for('auth.login'))
+    except Exception as e:
+        flash('Error en el registro. Inténtalo de nuevo.', 'error')
+        return redirect(url_for('auth.register'))
+    
     return render_template('auth/register.html', form=form)
 
 @auth_bp.route('/logout')
@@ -59,7 +75,7 @@ def solicitar_recuperacion():
     if form.validate_on_submit():
         usuario = User.query.filter_by(email=form.email.data).first()
         if usuario:
-            enviar_correo_recuperacion(usuario)
+            pass
         flash('Si el correo existe, se ha enviado un enlace para restablecer la contraseña.', 'info')
         return redirect(url_for('auth.login'))
 
@@ -70,9 +86,8 @@ def recuperar_password_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.inicio'))
 
-    email = validar_token(token, salt='recuperar-password')
-    if not email:
-        flash('El enlace es inválido o ha expirado.', 'danger')
+    
+    
         return redirect(url_for('auth.solicitar_recuperacion'))
 
     usuario = User.query.filter_by(email=email).first()

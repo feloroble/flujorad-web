@@ -1,4 +1,68 @@
 # Created by venv; see https://docs.python.org/3/library/venv.html
 
-app/.env
-migrations/
+.env
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+.venv
+env/
+venv/
+
+# Database
+*.db
+*.sqlite3
+
+# Backups (opcional: podrías querer versionarlos)
+backups/
+*.sql
+
+# Logs
+*.log
+logs/
+deploy_*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migraciones temporales (solo en desarrollo)
+# migrations/versions/*_temp.py
+
+.env
+*.pyc
+__pycache__/
+instance/
+*.db
+*.sqlite
+migrations/versions/__pycache__/

@@ -1,0 +1,24 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Nuevo mensaje de contacto - {{ app_name }}{% endblock %}
+
+{% block content %}
+<h2>Nuevo mensaje de contacto 📧</h2>
+
+<p>Has recibido un nuevo mensaje a través del formulario de contacto:</p>
+
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+    <p><strong>Nombre:</strong> {{ contact_name }}</p>
+    <p><strong>Email:</strong> {{ contact_email }}</p>
+    <p><strong>Asunto:</strong> {{ contact_subject }}</p>
+    
+    <hr style="border: none; border-top: 1px solid #dee2e6; margin: 15px 0;">
+    
+    <p><strong>Mensaje:</strong></p>
+    <div style="white-space: pre-wrap; line-height: 1.6;">{{ contact_message }}</div>
+</div>
+
+<p>Puedes responder directamente a <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
+
+<p><small>Este mensaje fue enviado desde el formulario de contacto de {{ app_name }}</small></p>
+{% endblock %}
