@@ -2,7 +2,9 @@ import email
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 
-from ..utils.mail import EmailService
+from ..utils.tokens import confirm_reset_token, generate_reset_token
+
+from ..utils.mail import EmailService, send_email
 from ..models.user import User
 from ..extensions import db, bcrypt
 
@@ -68,38 +70,41 @@ def terminos():
 
 @auth_bp.route('/recuperar', methods=['GET', 'POST'])
 def solicitar_recuperacion():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.inicio'))
 
     form = SolicitarRecuperacionForm()
     if form.validate_on_submit():
-        usuario = User.query.filter_by(email=form.email.data).first()
-        if usuario:
-            pass
-        flash('Si el correo existe, se ha enviado un enlace para restablecer la contraseña.', 'info')
+        email = form.email.data
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = generate_reset_token(user.email)
+            # Enviar correo de recuperación
+            if EmailService.send_password_reset_email(
+               user_email=user.email,
+               user_name=user.name,
+               reset_token=token
+            ):
+            
+               flash('Se ha enviado un enlace de recuperación a tu correo.', 'info')
+            else:
+               flash('Error al enviar el correo. Inténtalo más tarde.', 'error')
+        else:
+           flash('Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.', 'info')
         return redirect(url_for('auth.login'))
-
     return render_template('auth/solicitar_recuperacion.html', form=form)
 
 @auth_bp.route('/recuperar/<token>', methods=['GET', 'POST'])
 def recuperar_password_token(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('main.inicio'))
-
-    
-    
+    email = confirm_reset_token(token)
+    if not email:
+        flash('El enlace es inválido o ha expirado.', 'danger')
         return redirect(url_for('auth.solicitar_recuperacion'))
-
-    usuario = User.query.filter_by(email=email).first()
-    if not usuario:
-        flash('Cuenta no encontrada.', 'warning')
-        return redirect(url_for('auth.login'))
 
     form = RestablecerPasswordForm()
     if form.validate_on_submit():
-        User.password = generate_password_hash(form.password.data)
-        db.session.commit()
-        flash('Contraseña actualizada correctamente. Ahora puedes iniciar sesión.', 'success')
-        return redirect(url_for('auth.login'))
-
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            db.session.commit()
+            flash('Tu contraseña ha sido actualizada.', 'success')
+            return redirect(url_for('auth.login'))
     return render_template('auth/restablecer_password.html', form=form)

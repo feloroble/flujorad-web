@@ -7,7 +7,7 @@ import logging
 load_dotenv() 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY") or 'fdkgfsdkgsd45465464fsffeeter/**5/4fhfb6747//*'
+    SECRET_KEY = os.environ.get("SECRET_KEY") 
     LALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de migraciones

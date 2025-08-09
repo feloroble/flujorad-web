@@ -1,7 +1,8 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user
-from app.extensions import db
+from ..extensions import db
 from app.models.contact_message import ContactMessage
+from ..utils.mail import EmailService
 
 from .forms  import ContactForm
 
@@ -17,24 +18,44 @@ def contacto():
     form = ContactForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
+            name = current_user.name
+            email = current_user.email
+            subject = form.subject.data
+            message = form.message.data
+
             msg = ContactMessage(
                 user_id=current_user.id,
-                name=current_user.name,
-                email=current_user.email,
-                subject=form.subject.data,
-                message=form.message.data
+                name=name,
+                email=email,
+                subject=subject,
+                message=message
             )
         else:
+            name = form.name.data
+            email = form.email.data
+            subject = form.subject.data
+            message = form.message.data
+
             msg = ContactMessage(
-                name=form.name.data,
-                email=form.email.data,
-                subject=form.subject.data,
-                message=form.message.data
+                name=name,
+                email=email,
+                subject=subject,
+                message=message
             )
+        
         db.session.add(msg)
         db.session.commit()
-        # Aquí podrías enviar un correo o guardar en DB si deseas
-        flash('Mensaje enviado correctamente. ¡Gracias por contactarme!', 'success')
+
+        if EmailService.send_contact_notification(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message
+        ):
+            flash('Tu mensaje ha sido enviado correctamente. Te contactaremos pronto.', 'success')
+        else:
+            flash('Error al enviar tu mensaje. Por favor inténtalo más tarde.', 'error')
+
         return redirect(url_for('main.contacto'))
 
     return render_template('contacto.html', form=form)

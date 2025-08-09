@@ -286,7 +286,7 @@ class EmailService:
             template_vars={
                 'user_name': user_name,
                 'reset_token': reset_token,
-                'reset_url': f"{current_app.config.get('BASE_URL', '')}/reset-password/{reset_token}",
+                'reset_url': f"{current_app.config.get('BASE_URL', '')}/recuperar/{reset_token}",
                 'expiry_time': current_app.config.get('TOKEN_EXPIRATION', 3600) // 60  # minutos
             }
         )
