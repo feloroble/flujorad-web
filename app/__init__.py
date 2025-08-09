@@ -32,7 +32,8 @@ from .routes import register_routes
 
 
 # Cargar variables de entorno
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=env_path)
 
 def verify_database_connection():
     """Verificar conexión a base de datos compatible con SQLAlchemy 1.x y 2.x"""
