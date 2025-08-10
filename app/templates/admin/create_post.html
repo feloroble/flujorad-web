@@ -1,59 +1,406 @@
-{% extends 'base.html' %}
-{% block title %}Crear Publicación{% endblock %}
-{% block content %}
-<div class="container mt-5">
-  <h2>Crear publicación</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Crear Publicación{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-primario: #1e3a8a;
+            --azul-secundario: #3b82f6;
+            --azul-claro: #dbeafe;
+            --azul-hover: #1d4ed8;
+            --azul-texto: #1e40af;
+            --azul-border: #93c5fd;
+        }
 
-  <!-- Mostrar errores o mensajes -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
 
-  <form method="POST" enctype="multipart/form-data" id="form-pop">
-    {{ form.hidden_tag() }}
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
+            border: 1px solid var(--azul-border);
+            margin: 2rem auto;
+            max-width: 800px;
+        }
 
-    <div class="mb-3">
-      {{ form.title.label(class="form-label") }}
-      {{ form.title(class="form-control") }}
-      {% for error in form.title.errors %}
-        <div class="text-danger">{{ error }}</div>
-      {% endfor %}
+        .header-section {
+            background: linear-gradient(135deg, var(--azul-primario) 0%, var(--azul-secundario) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+
+        .header-section h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--azul-secundario);
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--azul-primario) 0%, var(--azul-secundario) 100%);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--azul-hover) 0%, var(--azul-primario) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--azul-claro);
+            color: var(--azul-texto);
+            border: 1px solid var(--azul-border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--azul-secundario);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .bloque-item {
+            background: linear-gradient(135deg, #f8fafc 0%, var(--azul-claro) 100%);
+            border: 2px solid var(--azul-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bloque-item:hover {
+            border-color: var(--azul-secundario);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .bloque-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bloque-tipo {
+            background: var(--azul-secundario);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .btn-eliminar {
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-eliminar:hover {
+            background: #b91c1c;
+            transform: scale(1.1);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            color: #991b1b;
+        }
+
+        .botones-accion {
+            background: var(--azul-claro);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .titulo-input {
+            border: 2px solid var(--azul-border);
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--azul-texto);
+            background: var(--azul-claro);
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 1rem;
+                border-radius: 10px;
+            }
+            
+            .header-section {
+                padding: 1.5rem;
+                border-radius: 10px 10px 0 0;
+            }
+            
+            .content-section {
+                padding: 1.5rem;
+            }
+            
+            .btn-secondary {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .botones-accion {
+                padding: 1rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h2><i class="fas fa-edit me-2"></i>Crear Publicación</h2>
+            <p class="mb-0 opacity-75">Comparte tu contenido con texto e imágenes</p>
+        </div>
+
+        <div class="content-section">
+            <!-- Mostrar errores o mensajes -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} fade-in">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }} me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data" id="form-pop">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-4">
+                    {{ form.title.label(class="form-label fw-bold") }}
+                    {{ form.title(class="form-control titulo-input", placeholder="Ingresa un título atractivo para tu publicación...") }}
+                    {% for error in form.title.errors %}
+                        <div class="text-danger mt-1">
+                            <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div id="bloques-container">
+                    <div class="empty-state" id="empty-state">
+                        <i class="fas fa-plus-circle"></i>
+                        <h5>¡Comienza a crear tu publicación!</h5>
+                        <p class="mb-0">Agrega bloques de texto o imágenes para construir tu contenido</p>
+                    </div>
+                </div>
+
+                <div class="botones-accion">
+                    <button type="button" class="btn btn-secondary me-2" onclick="agregarBloque('texto')">
+                        <i class="fas fa-font me-2"></i>Agregar Texto
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="agregarBloque('imagen')">
+                        <i class="fas fa-image me-2"></i>Agregar Imagen
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div id="bloques-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let contador = 0;
+        
+        function agregarBloque(tipo) {
+            const container = document.getElementById("bloques-container");
+            const emptyState = document.getElementById("empty-state");
+            
+            // Ocultar el estado vacío si existe
+            if (emptyState) {
+                emptyState.style.display = 'none';
+            }
+            
+            const bloque = document.createElement("div");
+            bloque.classList.add("bloque-item", "fade-in");
+            bloque.setAttribute("data-bloque-id", contador);
 
-    <div class="my-3">
-      <button type="button" class="btn btn-secondary me-2" onclick="agregarBloque('texto')">Agregar Texto</button>
-      <button type="button" class="btn btn-secondary" onclick="agregarBloque('imagen')">Agregar Imagen</button>
-    </div>
+            const iconoTipo = tipo === 'texto' ? 'fas fa-font' : 'fas fa-image';
+            
+            bloque.innerHTML = `
+                <input type="hidden" name="bloques[${contador}][tipo]" value="${tipo}">
+                <div class="bloque-header">
+                    <div class="bloque-tipo">
+                        <i class="${iconoTipo} me-2"></i>Bloque ${contador + 1} - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                    </div>
+                    <button type="button" class="btn-eliminar" onclick="eliminarBloque(${contador})" title="Eliminar bloque">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                ${tipo === 'texto' ? `
+                    <textarea 
+                        name="bloques[${contador}][contenido]" 
+                        class="form-control" 
+                        rows="4" 
+                        placeholder="Escribe tu contenido aquí..."
+                        required>
+                    </textarea>
+                ` : `
+                    <input 
+                        type="file" 
+                        name="bloques[${contador}][imagen]" 
+                        class="form-control" 
+                        accept="image/*"
+                        required>
+                    <small class="form-text text-muted mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Formatos soportados: JPG, PNG, GIF (máx. 5MB)
+                    </small>
+                `}
+            `;
 
-    {{ form.submit(class="btn btn-primary") }}
-  </form>
-</div>
+            container.appendChild(bloque);
+            contador++;
+            
+            // Scroll suave al nuevo bloque
+            setTimeout(() => {
+                bloque.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
 
-<script>
-  let contador = 0;
-  function agregarBloque(tipo) {
-    const container = document.getElementById("bloques-container");
-    const bloque = document.createElement("div");
-    bloque.classList.add("mb-3", "border", "p-3", "rounded");
+        function eliminarBloque(id) {
+            const bloque = document.querySelector(`[data-bloque-id="${id}"]`);
+            if (bloque) {
+                bloque.style.opacity = '0';
+                bloque.style.transform = 'translateX(-100%)';
+                setTimeout(() => {
+                    bloque.remove();
+                    verificarEstadoVacio();
+                }, 300);
+            }
+        }
 
-    bloque.innerHTML = `
-      <input type="hidden" name="bloques[${contador}][tipo]" value="${tipo}">
-      <label class="form-label">Bloque ${contador + 1} (${tipo})</label>
-      ${tipo === 'texto' ? `
-        <textarea name="bloques[${contador}][contenido]" class="form-control" rows="4" placeholder="Escribe el texto..."></textarea>
-      ` : `
-        <input type="file" name="bloques[${contador}][imagen]" class="form-control">
-      `}
-    `;
+        function verificarEstadoVacio() {
+            const container = document.getElementById("bloques-container");
+            const bloques = container.querySelectorAll(".bloque-item");
+            const emptyState = document.getElementById("empty-state");
+            
+            if (bloques.length === 0 && emptyState) {
+                emptyState.style.display = 'block';
+            }
+        }
 
-    container.appendChild(bloque);
-    contador++;
-  }
-</script>
-{% endblock %}
+        // Validación del formulario
+        document.getElementById('form-pop').addEventListener('submit', function(e) {
+            const titulo = document.querySelector('input[name="title"]').value.trim();
+            const bloques = document.querySelectorAll('.bloque-item');
+            
+            if (!titulo) {
+                e.preventDefault();
+                alert('Por favor, ingresa un título para tu publicación.');
+                return;
+            }
+            
+            if (bloques.length === 0) {
+                e.preventDefault();
+                alert('Agrega al menos un bloque de contenido a tu publicación.');
+                return;
+            }
+            
+            // Validar que los campos requeridos estén completos
+            let camposVacios = false;
+            bloques.forEach(bloque => {
+                const textarea = bloque.querySelector('textarea');
+                const fileInput = bloque.querySelector('input[type="file"]');
+                
+                if (textarea && !textarea.value.trim()) {
+                    camposVacios = true;
+                }
+                if (fileInput && !fileInput.files.length) {
+                    camposVacios = true;
+                }
+            });
+            
+            if (camposVacios) {
+                e.preventDefault();
+                alert('Por favor, completa todos los bloques antes de publicar.');
+                return;
+            }
+        });
+
+        // Agregar efectos visuales
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para el formulario
+            document.querySelector('.main-container').style.opacity = '0';
+            document.querySelector('.main-container').style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                document.querySelector('.main-container').style.transition = 'all 0.6s ease';
+                document.querySelector('.main-container').style.opacity = '1';
+                document.querySelector('.main-container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

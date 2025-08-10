@@ -2,7 +2,9 @@
 import os
 from dotenv import load_dotenv
 import logging
-
+from flask_wtf.csrf import CSRFProtect, validate_csrf, CSRFError
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, EmailField, TextAreaField, FileField, SubmitField
 # Cargar variables de entorno desde .env
 env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 load_dotenv(dotenv_path=env_path)

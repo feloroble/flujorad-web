@@ -4,41 +4,497 @@
 {% block content %}
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <h2 class="text-center text-primary mb-4">Contáctame</h2>
-      <p class="text-center mb-5">
-        ¿Tienes alguna consulta, propuesta profesional o deseas colaborar conmigo? <br>
-        Rellena el formulario y me pondré en contacto contigo lo antes posible.
-      </p>
+    <!-- Sección principal del formulario -->
+    <div class="col-lg-8">
+      <!-- Header con título profesional -->
+      <div class="text-center mb-5">
+        <h1 class="titulo-profesional">Contáctame</h1>
+        <div class="mx-auto mb-4" style="width: 100px; height: 4px; background: var(--gradient-blue); border-radius: 2px;"></div>
+        <p class="lead text-muted mb-0">
+          ¿Tienes alguna consulta, propuesta profesional o deseas colaborar conmigo?
+        </p>
+        <p class="text-muted">
+          Rellena el formulario y me pondré en contacto contigo lo antes posible.
+        </p>
+      </div>
 
-      <form method="POST">
-        {{ form.hidden_tag() }}
+      <div class="row g-4">
+        <!-- Formulario de contacto -->
+        <div class="col-lg-8">
+          <div class="card glass-effect border-0 shadow-lg" style="border-radius: 25px;">
+            <div class="card-header border-0 text-center py-4" style="background: var(--gradient-blue); border-radius: 25px 25px 0 0;">
+              <h4 class="text-white mb-0 fw-bold">
+                <i class="bi bi-envelope-paper me-2"></i>Envíame un mensaje
+              </h4>
+            </div>
+            
+            <div class="card-body p-4">
+              <form method="POST" id="contactForm" novalidate>
+                {{ form.hidden_tag() }}
 
-        <div class="mb-3">
-          {{ form.name.label(class_='form-label') }}
-          {{ form.name(class_='form-control', placeholder='Tu nombre completo') }}
+                <!-- Campo Nombre -->
+                <div class="mb-4">
+                  <div class="input-group">
+                    <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                      <i class="bi bi-person-fill"></i>
+                    </span>
+                    {{ form.name(class_='form-control', 
+                                placeholder='Tu nombre completo',
+                                style="border: 2px solid var(--primary-blue); border-left: none;") }}
+                  </div>
+                  {{ form.name.label(class_='form-label text-muted small mt-1') }}
+                  <div class="invalid-feedback" id="name-error"></div>
+                </div>
+
+                <!-- Campo Email -->
+                <div class="mb-4">
+                  <div class="input-group">
+                    <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                      <i class="bi bi-envelope-fill"></i>
+                    </span>
+                    {{ form.email(class_='form-control', 
+                                 placeholder='correo@ejemplo.com',
+                                 style="border: 2px solid var(--primary-blue); border-left: none;") }}
+                  </div>
+                  {{ form.email.label(class_='form-label text-muted small mt-1') }}
+                  <div class="invalid-feedback" id="email-error"></div>
+                </div>
+
+                <!-- Campo Asunto -->
+                <div class="mb-4">
+                  <div class="input-group">
+                    <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                      <i class="bi bi-tag-fill"></i>
+                    </span>
+                    {{ form.subject(class_='form-control', 
+                                   placeholder='Asunto del mensaje',
+                                   style="border: 2px solid var(--primary-blue); border-left: none;") }}
+                  </div>
+                  {{ form.subject.label(class_='form-label text-muted small mt-1') }}
+                  <div class="invalid-feedback" id="subject-error"></div>
+                </div>
+
+                <!-- Campo Mensaje -->
+                <div class="mb-4">
+                  <div class="form-floating">
+                    {{ form.message(class_='form-control', 
+                                   rows='6', 
+                                   placeholder='Escribe tu mensaje aquí...',
+                                   style="min-height: 150px; border: 2px solid var(--primary-blue); resize: vertical;") }}
+                    {{ form.message.label(class_='text-muted') }}
+                  </div>
+                  <div class="d-flex justify-content-between mt-2">
+                    <small class="text-muted">
+                      <i class="bi bi-chat-dots me-1"></i>Comparte todos los detalles
+                    </small>
+                    <small class="text-muted" id="charCounter">0 caracteres</small>
+                  </div>
+                  <div class="invalid-feedback" id="message-error"></div>
+                </div>
+
+                <!-- Botón de envío -->
+                <div class="d-grid">
+                  {{ form.submit(class_='btn btn-primary py-3 fw-bold', 
+                               style="font-size: 1.1rem; letter-spacing: 0.5px;",
+                               id="submitBtn") }}
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
-        <div class="mb-3">
-          {{ form.email.label(class_='form-label') }}
-          {{ form.email(class_='form-control', placeholder='correo@ejemplo.com') }}
-        </div>
+        <!-- Información de contacto lateral -->
+        <div class="col-lg-4">
+          <!-- Card de información de contacto -->
+          <div class="card glass-effect border-0 shadow-lg mb-4" style="border-radius: 20px;">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3" style="color: var(--text-blue);">
+                <i class="bi bi-info-circle me-2"></i>Información de Contacto
+              </h5>
+              
+              <div class="contact-info mb-3">
+                <div class="d-flex align-items-center mb-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                       style="width: 40px; height: 40px; background: var(--soft-blue);">
+                    <i class="bi bi-geo-alt-fill" style="color: var(--primary-blue);"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Ubicación</small>
+                    <strong style="color: var(--text-blue);">Italia</strong>
+                  </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                       style="width: 40px; height: 40px; background: var(--soft-blue);">
+                    <i class="bi bi-clock-fill" style="color: var(--primary-blue);"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Tiempo de respuesta</small>
+                    <strong style="color: var(--text-blue);">24-48 horas</strong>
+                  </div>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                       style="width: 40px; height: 40px; background: var(--soft-blue);">
+                    <i class="bi bi-translate" style="color: var(--primary-blue);"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Idiomas</small>
+                    <strong style="color: var(--text-blue);">Español, Inglés</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="mb-3">
-          {{ form.subject.label(class_='form-label') }}
-          {{ form.subject(class_='form-control', placeholder='Asunto del mensaje') }}
+          <!-- Card de redes sociales -->
+          <div class="card glass-effect border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="card-body p-4 text-center">
+              <h6 class="fw-bold mb-3" style="color: var(--text-blue);">
+                <i class="bi bi-share me-2"></i>También puedes encontrarme en
+              </h6>
+              
+              <div class="d-flex justify-content-center gap-3">
+                <a href="https://www.facebook.com/tecnotactiloficial/" 
+                   class="btn btn-outline-primary rounded-circle p-2" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="width: 45px; height: 45px;">
+                  <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/tecno__tactil/" 
+                   class="btn btn-outline-primary rounded-circle p-2" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="width: 45px; height: 45px;">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <a href="https://x.com/tecno__tactil" 
+                   class="btn btn-outline-primary rounded-circle p-2" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="width: 45px; height: 45px;">
+                  <i class="bi bi-twitter"></i>
+                </a>
+                <a href="https://linkedin.com/company/tecnotactil" 
+                   class="btn btn-outline-primary rounded-circle p-2" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="width: 45px; height: 45px;">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+              </div>
+              
+              <p class="small text-muted mt-3 mb-0">
+                Sígueme para estar al día con las últimas novedades tecnológicas
+              </p>
+            </div>
+          </div>
         </div>
-
-        <div class="mb-3">
-          {{ form.message.label(class_='form-label') }}
-          {{ form.message(class_='form-control', rows='5', placeholder='Escribe tu mensaje aquí...') }}
-        </div>
-
-        <div class="text-center">
-          {{ form.submit(class_='btn btn-primary px-5') }}
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Estado de éxito (oculto por defecto) -->
+<div id="successMessage" class="container py-5" style="display: none;">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="glass-effect p-5 text-center" style="border-radius: 25px; border-left: 4px solid #198754;">
+        <div class="mb-4">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="fw-bold text-success mb-3">¡Mensaje enviado con éxito!</h3>
+        <p class="text-muted mb-4">
+          Gracias por ponerte en contacto conmigo. He recibido tu mensaje y me pondré en contacto contigo lo antes posible.
+        </p>
+        <button class="btn btn-primary rounded-pill px-4" onclick="location.reload()">
+          <i class="bi bi-arrow-left me-2"></i>Enviar otro mensaje
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos específicos para el formulario de contacto -->
+<style>
+  /* Efectos de enfoque para campos */
+  .form-control:focus,
+  .form-floating .form-control:focus {
+    border-color: var(--light-blue) !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 102, 204, 0.25) !important;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+
+  /* Form floating labels mejorados */
+  .form-floating label {
+    color: var(--primary-blue);
+    font-weight: 500;
+  }
+
+  .form-floating .form-control:focus ~ label,
+  .form-floating .form-control:not(:placeholder-shown) ~ label {
+    color: var(--primary-blue);
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+  }
+
+  /* Input groups con bordes redondeados */
+  .input-group .form-control:first-child,
+  .input-group-text:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  .input-group .form-control:last-child,
+  .input-group-text:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+
+  /* Efectos de validación */
+  .form-control.is-invalid {
+    border-color: #dc3545;
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .form-control.is-valid {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+  }
+
+  /* Animación de error */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Loading state del botón */
+  .btn-loading {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Efectos hover para los iconos sociales */
+  .btn-outline-primary:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+  }
+
+  /* Información de contacto */
+  .contact-info .rounded-circle {
+    transition: all 0.3s ease;
+  }
+
+  .contact-info .d-flex:hover .rounded-circle {
+    transform: scale(1.1);
+    background: var(--primary-blue) !important;
+  }
+
+  .contact-info .d-flex:hover .rounded-circle i {
+    color: white !important;
+  }
+
+  /* Animaciones de entrada */
+  .card {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  /* Contador de caracteres */
+  #charCounter.warning {
+    color: #ffc107 !important;
+  }
+
+  #charCounter.danger {
+    color: #dc3545 !important;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .col-lg-4 {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .titulo-profesional {
+      font-size: 2rem;
+    }
+    
+    .card {
+      margin: 0.5rem;
+      border-radius: 20px !important;
+    }
+    
+    .card-header {
+      border-radius: 20px 20px 0 0 !important;
+    }
+
+    .d-flex.justify-content-center.gap-3 {
+      gap: 1rem !important;
+    }
+
+    .btn.rounded-circle {
+      width: 40px !important;
+      height: 40px !important;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<!-- JavaScript para funcionalidades interactivas -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageField = document.querySelector('textarea[name="message"]');
+    const charCounter = document.getElementById('charCounter');
+    const successMessage = document.getElementById('successMessage');
+
+    // Contador de caracteres para el mensaje
+    if (messageField && charCounter) {
+        messageField.addEventListener('input', function() {
+            const length = this.value.length;
+            charCounter.textContent = length + ' caracteres';
+            
+            // Cambiar color según la longitud
+            charCounter.className = 'text-muted';
+            if (length > 500) {
+                charCounter.classList.add('warning');
+            }
+            if (length > 1000) {
+                charCounter.classList.remove('warning');
+                charCounter.classList.add('danger');
+            }
+        });
+    }
+
+    // Validación en tiempo real
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid')) {
+                validateField(this);
+            }
+        });
+    });
+
+    // Función de validación
+    function validateField(field) {
+        const value = field.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+
+        if (field.name === 'name') {
+            if (!value) {
+                isValid = false;
+                errorMessage = 'El nombre es requerido';
+            } else if (value.length < 2) {
+                isValid = false;
+                errorMessage = 'El nombre debe tener al menos 2 caracteres';
+            }
+        } else if (field.name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!value) {
+                isValid = false;
+                errorMessage = 'El email es requerido';
+            } else if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Por favor, ingresa un email válido';
+            }
+        } else if (field.name === 'subject') {
+            if (!value) {
+                isValid = false;
+                errorMessage = 'El asunto es requerido';
+            } else if (value.length < 5) {
+                isValid = false;
+                errorMessage = 'El asunto debe tener al menos 5 caracteres';
+            }
+        } else if (field.name === 'message') {
+            if (!value) {
+                isValid = false;
+                errorMessage = 'El mensaje es requerido';
+            } else if (value.length < 10) {
+                isValid = false;
+                errorMessage = 'El mensaje debe tener al menos 10 caracteres';
+            }
+        }
+
+        // Aplicar clases de validación
+        if (isValid) {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+            const errorDiv = document.getElementById(field.name + '-error');
+            if (errorDiv) errorDiv.textContent = '';
+        } else {
+            field.classList.remove('is-valid');
+            field.classList.add('is-invalid');
+            const errorDiv = document.getElementById(field.name + '-error');
+            if (errorDiv) errorDiv.textContent = errorMessage;
+        }
+
+        return isValid;
+    }
+
+    // Manejo del envío del formulario
+    form.addEventListener('submit', function(e) {
+        // Validar todos los campos
+        let isFormValid = true;
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isFormValid = false;
+            }
+        });
+
+        if (!isFormValid) {
+            e.preventDefault();
+            return;
+        }
+
+        // Mostrar loading state
+        submitBtn.classList.add('btn-loading');
+        submitBtn.textContent = 'Enviando mensaje...';
+        submitBtn.disabled = true;
+
+        // Simular envío (remover en producción)
+        // setTimeout(function() {
+        //     document.querySelector('.container.py-5').style.display = 'none';
+        //     successMessage.style.display = 'block';
+        // }, 2000);
+    });
+
+    // Efectos de animación al cargar
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = (index * 0.2) + 's';
+    });
+});
+</script>
 {% endblock %}

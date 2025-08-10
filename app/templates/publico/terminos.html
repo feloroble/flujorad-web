@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+
+{% block title %}Términos y Condiciones{% endblock %}
+
+{% block content %}
+<!-- Header profesional -->
+<div class="row mb-5">
+  <div class="col-12">
+    <div class="text-center">
+      <div class="mb-4">
+        <div class="rounded-circle bg-primary bg-opacity-10 p-4 d-inline-flex">
+          <i class="bi bi-file-text-fill display-3 text-primary"></i>
+        </div>
+      </div>
+      <h1 class="titulo-profesional mb-3">Términos y Condiciones</h1>
+      <p class="text-muted fs-5 mb-4">Condiciones de uso de la plataforma Tecno T@ctil</p>
+      <div class="badge bg-gradient fs-6 px-4 py-2" style="background: var(--gradient-blue);">
+        <i class="bi bi-calendar3 me-2 text-white"></i>
+        <span class="text-white">Última actualización: 9 de agosto de 2025</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navegación rápida -->
+<div class="card glass-effect mb-4">
+  <div class="card-header" style="background: var(--gradient-blue); color: white; border-radius: 20px 20px 0 0;">
+    <h5 class="card-title mb-0">
+      <i class="bi bi-list-ul me-2"></i>Índice de contenidos
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <a href="#aceptacion" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-1-circle-fill text-primary me-3"></i>
+          <span>Aceptación de términos</span>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="#servicios" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-2-circle-fill text-primary me-3"></i>
+          <span>Descripción de servicios</span>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="#usuario" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-3-circle-fill text-primary me-3"></i>
+          <span>Responsabilidades del usuario</span>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="#propiedad" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-4-circle-fill text-primary me-3"></i>
+          <span>Propiedad intelectual</span>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="#limitaciones" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-5-circle-fill text-primary me-3"></i>
+          <span>Limitaciones de responsabilidad</span>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="#contacto" class="text-decoration-none d-flex align-items-center p-2 rounded hover-effect">
+          <i class="bi bi-6-circle-fill text-primary me-3"></i>
+          <span>Información de contacto</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contenido de términos -->
+<div class="row">
+  <div class="col-12">
+    
+    <!-- Sección 1: Aceptación -->
+    <div class="card glass-effect mb-4" id="aceptacion">
+      <div class="card-header bg-light border-0" style="border-radius: 20px 20px 0 0;">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-1-circle-fill me-3"></i>Aceptación de Términos
+        </h4>
+      </div>
+      <div class="card-body">
+        <p class="mb-3">Al acceder y utilizar la plataforma <strong>Tecno T@ctil</strong>, usted acepta estar legalmente vinculado por estos términos y condiciones de uso.</p>
+        <div class="alert alert-info border-0" style="background: var(--soft-blue);">
+          <i class="bi bi-info-circle-fill text-primary me-2"></i>
+          Si no está de acuerdo con alguno de estos términos, no debe utilizar nuestros servicios.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 2: Servicios -->
+    <div class="card glass-effect mb-4" id="servicios">
+      <div class="card-header bg-light border-0">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-2-circle-fill me-3"></i>Descripción de Servicios
+        </h4>
+      </div>
+      <div class="card-body">
+        <p><strong>Tecno T@ctil</strong> proporciona una plataforma digital para:</p>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item border-0 bg-transparent">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Gestión de contenido y publicaciones tecnológicas
+          </li>
+          <li class="list-group-item border-0 bg-transparent">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Servicios de punto de venta virtual (vPOS)
+          </li>
+          <li class="list-group-item border-0 bg-transparent">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Herramientas de administración y gestión
+          </li>
+          <li class="list-group-item border-0 bg-transparent">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Servicios de soporte técnico especializado
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sección 3: Responsabilidades -->
+    <div class="card glass-effect mb-4" id="usuario">
+      <div class="card-header bg-light border-0">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-3-circle-fill me-3"></i>Responsabilidades del Usuario
+        </h4>
+      </div>
+      <div class="card-body">
+        <p>Como usuario de nuestra plataforma, usted se compromete a:</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 h-100" style="border-color: var(--primary-blue) !important; border-width: 2px !important;">
+              <h6 class="text-primary">
+                <i class="bi bi-shield-check me-2"></i>Uso Responsable
+              </h6>
+              <small class="text-muted">Utilizar la plataforma de manera ética y legal, respetando las normas establecidas.</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 h-100" style="border-color: var(--primary-blue) !important; border-width: 2px !important;">
+              <h6 class="text-primary">
+                <i class="bi bi-key me-2"></i>Seguridad de Cuenta
+              </h6>
+              <small class="text-muted">Mantener la confidencialidad de sus credenciales de acceso y notificar cualquier uso no autorizado.</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 h-100" style="border-color: var(--primary-blue) !important; border-width: 2px !important;">
+              <h6 class="text-primary">
+                <i class="bi bi-file-check me-2"></i>Contenido Apropiado
+              </h6>
+              <small class="text-muted">Publicar únicamente contenido legal, veraz y que no infrinja derechos de terceros.</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded-3 h-100" style="border-color: var(--primary-blue) !important; border-width: 2px !important;">
+              <h6 class="text-primary">
+                <i class="bi bi-exclamation-triangle me-2"></i>Prohibiciones
+              </h6>
+              <small class="text-muted">No intentar vulnerar la seguridad del sistema ni realizar actividades maliciosas.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 4: Propiedad Intelectual -->
+    <div class="card glass-effect mb-4" id="propiedad">
+      <div class="card-header bg-light border-0">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-4-circle-fill me-3"></i>Propiedad Intelectual
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning border-0" style="background: #fff3cd;">
+          <i class="bi bi-copyright text-warning me-2"></i>
+          <strong>Todos los derechos reservados.</strong> El contenido, diseño, logotipos y software de Tecno T@ctil están protegidos por derechos de autor.
+        </div>
+        <p>El usuario conserva los derechos sobre el contenido que publique, pero otorga a Tecno T@ctil una licencia para mostrar y distribuir dicho contenido en la plataforma.</p>
+      </div>
+    </div>
+
+    <!-- Sección 5: Limitaciones -->
+    <div class="card glass-effect mb-4" id="limitaciones">
+      <div class="card-header bg-light border-0">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-5-circle-fill me-3"></i>Limitaciones de Responsabilidad
+        </h4>
+      </div>
+      <div class="card-body">
+        <p>Tecno T@ctil se esfuerza por mantener la plataforma disponible y segura, sin embargo:</p>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <i class="bi bi-dot text-primary fs-4"></i>
+            No garantizamos la disponibilidad continua del servicio
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-dot text-primary fs-4"></i>
+            No nos responsabilizamos por pérdidas derivadas del uso de la plataforma
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-dot text-primary fs-4"></i>
+            El usuario es responsable de mantener copias de seguridad de su información
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sección 6: Contacto -->
+    <div class="card glass-effect mb-5" id="contacto">
+      <div class="card-header bg-light border-0">
+        <h4 class="text-primary mb-0">
+          <i class="bi bi-6-circle-fill me-3"></i>Información de Contacto
+        </h4>
+      </div>
+      <div class="card-body">
+        <p class="mb-4">Para consultas sobre estos términos y condiciones, puede contactarnos:</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--soft-blue);">
+              <i class="bi bi-envelope-fill text-primary fs-4 me-3"></i>
+              <div>
+                <h6 class="mb-0 text-primary">Email</h6>
+                <small class="text-muted">info@tecnotactil.com</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex align-items-center p-3 rounded-3" style="background: var(--soft-blue);">
+              <i class="bi bi-person-fill text-primary fs-4 me-3"></i>
+              <div>
+                <h6 class="mb-0 text-primary">Responsable</h6>
+                <small class="text-muted">Félix Rodríguez Roble</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Botones de acción -->
+<div class="text-center mb-5">
+  <div class="row g-3 justify-content-center">
+    <div class="col-auto">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-4">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Ir al Login
+      </a>
+    </div>
+    <div class="col-auto">
+      <a href="{{ url_for('main.politica') }}" class="btn btn-outline-primary btn-lg px-4">
+        <i class="bi bi-shield-lock me-2"></i>Política de Privacidad
+      </a>
+    </div>
+    <div class="col-auto">
+      <a href="{{ url_for('main.home') }}" class="btn btn-outline-secondary btn-lg px-4">
+        <i class="bi bi-house me-2"></i>Inicio
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript para efectos -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Scroll suave para la navegación
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        // Efecto de highlight en la sección
+        target.style.transform = 'scale(1.02)';
+        target.style.boxShadow = '0 10px 30px rgba(0, 102, 204, 0.2)';
+        setTimeout(() => {
+          target.style.transform = 'scale(1)';
+          target.style.boxShadow = '';
+        }, 1000);
+      }
+    });
+  });
+
+  // Animación de entrada para las cards
+  const cards = document.querySelectorAll('.card');
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    setTimeout(() => {
+      card.style.transition = 'all 0.6s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 200);
+  });
+
+  // Efecto parallax suave en scroll
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const header = document.querySelector('.titulo-profesional').parentElement;
+    header.style.transform = `translateY(${scrolled * 0.1}px)`;
+  });
+});
+</script>
+
+<style>
+/* Estilos específicos para términos y condiciones */
+.hover-effect {
+  transition: all 0.3s ease;
+}
+
+.hover-effect:hover {
+  background-color: var(--soft-blue) !important;
+  transform: translateX(10px);
+  color: var(--primary-blue) !important;
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 102, 204, 0.1);
+}
+
+/* Efectos de scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animación de las secciones numeradas */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .titulo-profesional {
+    font-size: 2rem;
+  }
+  
+  .btn-lg {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+  
+  .display-3 {
+    font-size: 2rem;
+  }
+}
+</style>
+
+{% endblock %}

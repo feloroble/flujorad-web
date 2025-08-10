@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import FloatField, SelectField, StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import FloatField, HiddenField, SelectField, StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length,EqualTo
 from flask_wtf.file import FileField, FileAllowed
 
@@ -72,3 +72,8 @@ class RestablecerPasswordForm(FlaskForm):
     ])
     confirmar = PasswordField('Confirmar contraseña', validators=[DataRequired()])
     submit = SubmitField('Restablecer contraseña')
+
+class DeletePostForm(FlaskForm):
+    """Formulario seguro para eliminar publicaciones"""
+    post_id = HiddenField('Post ID', validators=[DataRequired()])
+    submit = SubmitField('Eliminar')

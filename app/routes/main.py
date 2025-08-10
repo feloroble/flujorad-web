@@ -13,6 +13,13 @@ def home():
 
     return render_template('index.html')
 
+@main_bp.route('/terminos-y-condiciones')
+def terminos():
+    return render_template('publico/terminos.html')
+@main_bp.route('/politica-de-privacidad')
+def politica():
+    return render_template('publico/privasidad.html')    
+
 @main_bp.route('/contacto', methods=['GET', 'POST'])
 def contacto():
     form = ContactForm()

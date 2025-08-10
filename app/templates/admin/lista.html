@@ -1,23 +1,520 @@
 {% extends 'base.html' %}
 {% block title %}Publicaciones{% endblock %}
 {% block content %}
-<div class="container mt-5">
-  <h2>Publicaciones</h2>
-  <hr>
-  {% for pub in publicaciones %}
-    <div class="mb-4">
-      <h4>{{ pub.titulo }}</h4>
-      <p class="text-muted">
-        Publicado por {{ pub.user_id.email }} el {{ pub.fecha_creacion.strftime('%d/%m/%Y') }}
-      </p>
-      <a href="{{ url_for('admin.ver_publicacion', id=pub.id) }}" class="btn btn-outline-primary">Ver</a>
-    </div>
-    <hr>
-  {% endfor %}
-</div>
-{% if not publicaciones %}
-  <div class="alert alert-info" role="alert">
-    No hay publicaciones disponibles.
+
+<style>
+  /* Estilos específicos para la página de publicaciones */
+  .publicaciones-header {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 3rem 0 2rem;
+    margin: -2rem -15px 3rem -15px;
+    border-radius: 0 0 30px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .publicaciones-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="20" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .publicaciones-title {
+    position: relative;
+    z-index: 2;
+    font-size: 3rem;
+    font-weight: 800;
+    text-align: center;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+  }
+
+  .publicaciones-subtitle {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    opacity: 0.9;
+    font-weight: 300;
+  }
+
+  .publication-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .publication-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-blue);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    transform-origin: bottom;
+  }
+
+  .publication-card:hover::before {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  .publication-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.25);
+    border-color: var(--primary-blue);
+  }
+
+  .publication-header {
+    background: linear-gradient(135deg, var(--soft-blue) 0%, rgba(255, 255, 255, 0.8) 100%);
+    padding: 1.5rem 2rem 1rem;
+    border-bottom: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+  }
+
+  .publication-title {
+    color: var(--text-blue);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .publication-card:hover .publication-title {
+    color: var(--primary-blue);
+  }
+
+  .publication-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(0, 102, 204, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+  }
+
+  .meta-item:hover {
+    background: rgba(0, 102, 204, 0.2);
+    transform: scale(1.05);
+  }
+
+  .publication-body {
+    padding: 1.5rem 2rem 2rem;
+  }
+
+  .publication-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .btn-ver-publicacion {
+    background: var(--gradient-blue);
+    border: none;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-ver-publicacion:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+    color: white;
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--primary-blue) 100%);
+  }
+
+  .btn-ver-publicacion:active {
+    transform: translateY(-1px);
+  }
+
+  .publication-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    opacity: 0.8;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+  }
+
+  .empty-state-icon {
+    font-size: 4rem;
+    color: var(--primary-blue);
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+
+  .empty-state-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-blue);
+    margin-bottom: 1rem;
+  }
+
+  .empty-state-description {
+    color: var(--accent-blue);
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+
+  /* Animaciones */
+  .publication-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+
+  .publication-card:nth-child(1) { animation-delay: 0.1s; }
+  .publication-card:nth-child(2) { animation-delay: 0.2s; }
+  .publication-card:nth-child(3) { animation-delay: 0.3s; }
+  .publication-card:nth-child(4) { animation-delay: 0.4s; }
+  .publication-card:nth-child(5) { animation-delay: 0.5s; }
+
+  /* Separadores modernos */
+  .modern-separator {
+    border: none;
+    height: 2px;
+    background: var(--gradient-blue);
+    margin: 2rem 0;
+    border-radius: 1px;
+    opacity: 0.3;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .publicaciones-header {
+      padding: 2rem 0 1.5rem;
+      margin: -1rem -15px 2rem -15px;
+    }
+    
+    .publicaciones-title {
+      font-size: 2.2rem;
+    }
+    
+    .publication-header,
+    .publication-body {
+      padding: 1rem 1.5rem;
+    }
+    
+    .publication-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .publication-actions {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    
+    .publication-stats {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .publicaciones-title {
+      font-size: 1.8rem;
+    }
+    
+    .btn-ver-publicacion {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- Header de la página -->
+<div class="publicaciones-header">
+  <div class="container">
+    <h1 class="publicaciones-title">
+      <i class="bi bi-journal-bookmark me-3"></i>
+      Publicaciones
+    </h1>
+    <p class="publicaciones-subtitle">
+      Descubre las últimas novedades y artículos de Tecno T@ctil
+    </p>
   </div>
-{% endif %}
+</div>
+
+<div class="container">
+  {% if publicaciones %}
+    <!-- Lista de publicaciones -->
+    <div class="row">
+      {% for pub in publicaciones %}
+        <div class="col-12">
+          <div class="publication-card">
+            <!-- Header de la publicación -->
+            <div class="publication-header">
+              <h3 class="publication-title">
+                <i class="bi bi-file-text me-2"></i>
+                {{ pub.titulo }}
+              </h3>
+              <div class="publication-meta">
+                <div class="meta-item">
+                  <i class="bi bi-person-circle"></i>
+                  <span>{{ pub.user_id.email }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-calendar3"></i>
+                  <span>{{ pub.fecha_creacion.strftime('%d de %B del %Y') }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-clock"></i>
+                  <span>{{ pub.fecha_creacion.strftime('%H:%M') }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cuerpo de la publicación -->
+            <div class="publication-body">
+              <div class="publication-actions">
+                <div class="publication-stats">
+                  <div class="stat-item">
+                    <i class="bi bi-eye"></i>
+                    <span>Ver detalles</span>
+                  </div>
+                  <div class="stat-item">
+                    <i class="bi bi-bookmark"></i>
+                    <span>Guardar</span>
+                  </div>
+                </div>
+                <a href="{{ url_for('admin.ver_publicacion', id=pub.id) }}" class="btn-ver-publicacion">
+                  <i class="bi bi-arrow-right-circle"></i>
+                  <span>Leer más</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Paginación moderna (si es necesaria) -->
+    <div class="d-flex justify-content-center mt-4">
+      <nav aria-label="Navegación de publicaciones">
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-primary" disabled>
+            <i class="bi bi-chevron-left me-1"></i>Anterior
+          </button>
+          <button class="btn btn-primary">1</button>
+          <button class="btn btn-outline-primary">2</button>
+          <button class="btn btn-outline-primary">3</button>
+          <button class="btn btn-outline-primary">
+            Siguiente<i class="bi bi-chevron-right ms-1"></i>
+          </button>
+        </div>
+      </nav>
+    </div>
+  {% else %}
+    <!-- Estado vacío mejorado -->
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="bi bi-journal-x"></i>
+      </div>
+      <h3 class="empty-state-title">No hay publicaciones disponibles</h3>
+      <p class="empty-state-description">
+        Aún no se han creado publicaciones. ¡Sé el primero en compartir contenido interesante!
+      </p>
+      <div class="mt-4">
+        <a href="{{ url_for('admin.panel_admin') }}" class="btn-ver-publicacion">
+          <i class="bi bi-plus-circle"></i>
+          <span>Crear nueva publicación</span>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Sección de estadísticas adicionales -->
+  {% if publicaciones %}
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card glass-effect">
+          <div class="card-body text-center">
+            <h5 class="card-title" style="color: var(--text-blue); font-weight: 600;">
+              <i class="bi bi-graph-up me-2"></i>
+              Resumen de Publicaciones
+            </h5>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="stat-box">
+                  <h3 style="color: var(--primary-blue); font-weight: 700;">{{ publicaciones|length }}</h3>
+                  <p class="mb-0" style="color: var(--accent-blue);">
+                    <i class="bi bi-file-earmark-text me-1"></i>
+                    Total de publicaciones
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-box">
+                  <h3 style="color: var(--primary-blue); font-weight: 700;">
+                    <i class="bi bi-calendar-week"></i>
+                  </h3>
+                  <p class="mb-0" style="color: var(--accent-blue);">
+                    <i class="bi bi-clock-history me-1"></i>
+                    Publicaciones recientes
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-box">
+                  <h3 style="color: var(--primary-blue); font-weight: 700;">
+                    <i class="bi bi-people"></i>
+                  </h3>
+                  <p class="mb-0" style="color: var(--accent-blue);">
+                    <i class="bi bi-person-check me-1"></i>
+                    Autores activos
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  // Animaciones adicionales para la página de publicaciones
+  document.addEventListener('DOMContentLoaded', function() {
+    // Animación escalonada de las cards
+    const cards = document.querySelectorAll('.publication-card');
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, index * 150);
+    });
+
+    // Efecto de pulso en los meta-items
+    document.querySelectorAll('.meta-item').forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.05) translateY(-2px)';
+        this.style.boxShadow = '0 4px 15px rgba(0, 102, 204, 0.2)';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1) translateY(0)';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    // Efecto de onda en los botones
+    document.querySelectorAll('.btn-ver-publicacion').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        let ripple = document.createElement('span');
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.left = (e.clientX - e.target.offsetLeft) + 'px';
+        ripple.style.top = (e.clientY - e.target.offsetTop) + 'px';
+        
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Animación del header
+    const header = document.querySelector('.publicaciones-header');
+    if (header) {
+      header.style.opacity = '0';
+      header.style.transform = 'translateY(-50px)';
+      
+      setTimeout(() => {
+        header.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        header.style.opacity = '1';
+        header.style.transform = 'translateY(0)';
+      }, 100);
+    }
+  });
+
+  // CSS para la animación de ripple
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    .stat-box {
+      padding: 1rem;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-box:hover {
+      background: rgba(0, 102, 204, 0.05);
+      transform: translateY(-2px);
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
 {% endblock %}

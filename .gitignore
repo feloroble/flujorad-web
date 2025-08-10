@@ -66,3 +66,5 @@ instance/
 *.db
 *.sqlite
 migrations/versions/__pycache__/
+
+/app/static/uploads/*

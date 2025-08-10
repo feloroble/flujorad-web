@@ -1,33 +1,310 @@
 {% extends "base.html" %}
 
-{% block title %} REGISTRO {% endblock %}
+{% block title %}REGISTRO{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
-    <h3 class="text-center text-primary mb-4">Crear una cuenta</h3>
-    <form method="POST" novalidate>
-      {{ form.hidden_tag() }}
-      
-      <div class="mb-3">
-        {{ form.name.label(class="form-label text-primary") }}
-        {{ form.name(class="form-control") }}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 140px);">
+  <div class="row w-100 justify-content-center">
+    <div class="col-lg-5 col-md-7 col-sm-9">
+      <!-- Card principal con efecto glassmorphism -->
+      <div class="card glass-effect shadow-lg border-0" style="border-radius: 25px; overflow: hidden;">
+        <!-- Header con gradiente -->
+        <div class="card-header text-center border-0 py-4" style="background: var(--gradient-blue);">
+          <div class="mb-3">
+            <i class="bi bi-person-plus-fill text-white" style="font-size: 3rem;"></i>
+          </div>
+          <h3 class="text-white mb-1 fw-bold">Crear una cuenta</h3>
+          <p class="text-white opacity-75 mb-0">Únete a Tecno T@ctil</p>
+        </div>
+
+        <!-- Cuerpo del formulario -->
+        <div class="card-body p-4">
+          <form method="POST" novalidate id="registerForm">
+            {{ form.hidden_tag() }}
+            
+            <!-- Campo Nombre -->
+            <div class="mb-3">
+              <div class="input-group">
+                <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                  <i class="bi bi-person-fill"></i>
+                </span>
+                {{ form.name(class="form-control", placeholder="Ingresa tu nombre completo", style="border: 2px solid var(--primary-blue); border-left: none;") }}
+              </div>
+              {{ form.name.label(class="form-label text-muted small mt-1") }}
+              <!-- Contenedor para errores de validación -->
+              <div class="invalid-feedback" id="name-error"></div>
+            </div>
+
+            <!-- Campo Email -->
+            <div class="mb-3">
+              <div class="input-group">
+                <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                  <i class="bi bi-envelope-fill"></i>
+                </span>
+                {{ form.email(class="form-control", placeholder="tu@email.com", style="border: 2px solid var(--primary-blue); border-left: none;") }}
+              </div>
+              {{ form.email.label(class="form-label text-muted small mt-1") }}
+              <div class="invalid-feedback" id="email-error"></div>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="mb-4">
+              <div class="input-group">
+                <span class="input-group-text" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-right: none; color: var(--text-blue);">
+                  <i class="bi bi-lock-fill"></i>
+                </span>
+                {{ form.password(class="form-control", placeholder="Crea una contraseña segura", style="border: 2px solid var(--primary-blue); border-left: none; border-right: none;") }}
+                <button class="btn" type="button" id="togglePassword" style="background: var(--soft-blue); border: 2px solid var(--primary-blue); border-left: none; color: var(--text-blue);">
+                  <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                </button>
+              </div>
+              {{ form.password.label(class="form-label text-muted small mt-1") }}
+              <div class="invalid-feedback" id="password-error"></div>
+              
+              <!-- Indicador de fortaleza de contraseña -->
+              <div class="password-strength mt-2">
+                <div class="progress" style="height: 6px; border-radius: 10px;">
+                  <div class="progress-bar" role="progressbar" id="passwordStrength" style="width: 0%; transition: all 0.3s ease; border-radius: 10px;"></div>
+                </div>
+                <small class="text-muted" id="strengthText">Ingresa una contraseña</small>
+              </div>
+            </div>
+
+            <!-- Botón de registro -->
+            <div class="d-grid mb-3">
+              {{ form.submit(class="btn btn-primary py-3 fw-bold", style="font-size: 1.1rem; letter-spacing: 0.5px;", id="submitBtn") }}
+            </div>
+          </form>
+
+          <!-- Separador -->
+          <div class="text-center mb-3">
+            <hr class="my-4">
+            <span class="text-muted bg-white px-3" style="position: relative; top: -12px;">o</span>
+          </div>
+
+          <!-- Enlaces adicionales -->
+          <div class="text-center">
+            <p class="mb-2 text-muted">¿Ya tienes una cuenta?</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary rounded-pill px-4">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+            </a>
+          </div>
+        </div>
+
+        <!-- Footer informativo -->
+        <div class="card-footer bg-transparent border-0 text-center py-3">
+          <small class="text-muted">
+            <i class="bi bi-shield-check me-1"></i>
+            Al registrarte, aceptas nuestros 
+            <a href="#" class="text-decoration-none" style="color: var(--primary-blue);">términos de servicio</a>
+          </small>
+        </div>
       </div>
 
-      <div class="mb-3">
-        {{ form.email.label(class="form-label text-primary") }}
-        {{ form.email(class="form-control") }}
+      <!-- Card de beneficios (opcional, solo visible en pantallas grandes) -->
+      <div class="d-none d-lg-block mt-4">
+        <div class="glass-effect p-3 text-center" style="border-radius: 15px;">
+          <div class="row g-2">
+            <div class="col-4">
+              <i class="bi bi-newspaper text-primary mb-1" style="font-size: 1.5rem;"></i>
+              <br><small class="text-muted">Blog Exclusivo</small>
+            </div>
+            <div class="col-4">
+              <i class="bi bi-bell text-primary mb-1" style="font-size: 1.5rem;"></i>
+              <br><small class="text-muted">Notificaciones</small>
+            </div>
+            <div class="col-4">
+              <i class="bi bi-chat-dots text-primary mb-1" style="font-size: 1.5rem;"></i>
+              <br><small class="text-muted">Soporte 24/7</small>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="mb-3">
-        {{ form.password.label(class="form-label text-primary") }}
-        {{ form.password(class="form-control") }}
-      </div>
-
-      <div class="d-grid">
-        {{ form.submit(class="btn btn-primary") }}
-      </div>
-    </form>
+    </div>
   </div>
 </div>
+
+<!-- Estilos específicos para el formulario de registro -->
+<style>
+  /* Efectos de enfoque en campos */
+  .form-control:focus {
+    border-color: var(--light-blue) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25) !important;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+
+  /* Input groups con bordes redondeados */
+  .input-group .form-control:first-child,
+  .input-group-text:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  .input-group .form-control:last-child,
+  .input-group-text:last-child,
+  .input-group .btn:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+
+  /* Animación del botón toggle password */
+  #togglePassword {
+    transition: all 0.3s ease;
+  }
+
+  #togglePassword:hover {
+    background: var(--primary-blue) !important;
+    color: white !important;
+    transform: scale(1.1);
+  }
+
+  /* Estados de la barra de fortaleza */
+  .password-strength .progress-bar.weak {
+    background-color: #dc3545;
+  }
+
+  .password-strength .progress-bar.medium {
+    background-color: #ffc107;
+  }
+
+  .password-strength .progress-bar.strong {
+    background-color: #198754;
+  }
+
+  /* Efectos de validación */
+  .form-control.is-invalid {
+    border-color: #dc3545;
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .form-control.is-valid {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+  }
+
+  /* Animación de error */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Loader en el botón de submit */
+  .btn-loading {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive ajustes */
+  @media (max-width: 768px) {
+    .card {
+      margin: 1rem;
+      border-radius: 20px !important;
+    }
+    
+    .card-header {
+      padding: 2rem 1rem !important;
+    }
+    
+    .card-body {
+      padding: 2rem 1.5rem !important;
+    }
+  }
+</style>
+
+<!-- JavaScript para funcionalidades interactivas -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const passwordField = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const submitBtn = document.getElementById('submitBtn');
+    const strengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('strengthText');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', function() {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        
+        if (type === 'text') {
+            eyeIcon.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
+        } else {
+            eyeIcon.classList.replace('bi-eye-slash-fill', 'bi-eye-fill');
+        }
+    });
+
+    // Password strength indicator
+    passwordField.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        let strengthClass = '';
+        let strengthTextValue = '';
+
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[a-z]+/)) strength += 25;
+        if (password.match(/[A-Z]+/)) strength += 25;
+        if (password.match(/[0-9]+/) || password.match(/[^a-zA-Z0-9]+/)) strength += 25;
+
+        if (strength === 0) {
+            strengthClass = '';
+            strengthTextValue = 'Ingresa una contraseña';
+        } else if (strength <= 50) {
+            strengthClass = 'weak';
+            strengthTextValue = 'Contraseña débil';
+        } else if (strength <= 75) {
+            strengthClass = 'medium';
+            strengthTextValue = 'Contraseña media';
+        } else {
+            strengthClass = 'strong';
+            strengthTextValue = 'Contraseña fuerte';
+        }
+
+        strengthBar.style.width = strength + '%';
+        strengthBar.className = 'progress-bar ' + strengthClass;
+        strengthText.textContent = strengthTextValue;
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', function() {
+        submitBtn.classList.add('btn-loading');
+        submitBtn.textContent = 'Creando cuenta...';
+        submitBtn.disabled = true;
+    });
+
+    // Real-time validation (simulación)
+    const inputs = form.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            // Aquí puedes agregar validación en tiempo real
+            if (this.value.trim()) {
+                this.classList.add('is-valid');
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

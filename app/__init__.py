@@ -1,10 +1,13 @@
 import os
 import logging
 import click
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, flash, request
 from dotenv import load_dotenv
 from flask.cli import with_appcontext
 from logging.handlers import RotatingFileHandler
+from flask_wtf.csrf import CSRFError
+import secrets
+
 
 # Importar configuración de forma segura
 try:
@@ -59,6 +62,33 @@ def configure_app(app, config_name=None):
         config_name = config_name or os.getenv('FLASK_CONFIG', 'development')
         
         print(f"🔧 Configurando aplicación con entorno: {config_name}")
+        if not app.config.get('SECRET_KEY'):
+            # Generar SECRET_KEY segura si no existe
+            secret_key = os.environ.get('SECRET_KEY')
+            if not secret_key:
+                if config_name == 'development':
+                    secret_key = secrets.token_urlsafe(32)
+                    print("⚠️  Generando SECRET_KEY temporal para desarrollo")
+                else:
+                    raise ValueError("SECRET_KEY es obligatoria en producción")
+            app.config['SECRET_KEY'] = secret_key
+        
+        # Configuraciones CSRF específicas
+        app.config.update({
+            'WTF_CSRF_ENABLED': True,
+            'WTF_CSRF_TIME_LIMIT': 3600,  # 1 hora
+            'WTF_CSRF_SSL_STRICT': config_name == 'production',  # Solo HTTPS en producción
+        })
+        
+        # Configuraciones adicionales de seguridad para sesiones
+        if config_name == 'production':
+            app.config.update({
+                'SESSION_COOKIE_SECURE': True,
+                'SESSION_COOKIE_HTTPONLY': True,
+                'SESSION_COOKIE_SAMESITE': 'Lax',
+            })
+        
+        print("✅ Configuración CSRF aplicada")
         
         # Método 1: Usar el diccionario de configuraciones
         if config_name in CONFIG_DICT and CONFIG_DICT[config_name]:
@@ -161,6 +191,7 @@ def init_extensions(app):
         bcrypt.init_app(app)
         login_manager.init_app(app)
         csrf.init_app(app)
+        print("✅ CSRF Protection inicializado")
         mail.init_app(app)
         
         print("✅ Extensiones inicializadas correctamente")
@@ -172,7 +203,7 @@ def init_extensions(app):
 def configure_login_manager(app):
     """Configurar Flask-Login"""
     try:
-        from app.models.user import User
+        from .models.user import User
         
         @login_manager.user_loader
         def load_user(user_id):
@@ -187,6 +218,32 @@ def configure_login_manager(app):
         print(f"⚠️  No se pudo importar User model: {e}")
     except Exception as e:
         print(f"❌ Error configurando login manager: {e}")
+
+def configure_csrf_protection(app):
+    """Configurar protección CSRF y manejadores de errores"""
+    
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        """Manejar errores CSRF de forma elegante"""
+        flash('Token de seguridad expirado. Por favor, intenta nuevamente.', 'danger')
+        app.logger.warning(f'CSRF Error: {e.description} - IP: {request.remote_addr}')
+        return render_template('errors/csrf_error.html', reason=e.description), 400
+    
+    # Procesador de contexto para token CSRF en templates
+    @app.context_processor
+    def inject_csrf_token():
+        """Hacer disponible el token CSRF en todos los templates"""
+        from flask_wtf.csrf import generate_csrf
+        return dict(csrf_token=generate_csrf)
+    
+    # Ruta para obtener token CSRF via AJAX
+    @app.route('/api/csrf-token')
+    def get_csrf_token():
+        """Endpoint para obtener token CSRF para peticiones AJAX"""
+        from flask_wtf.csrf import generate_csrf
+        return jsonify({'csrf_token': generate_csrf()})
+    
+    print("✅ Protección CSRF configurada correctamente")
 
 
 def init_database(app):
@@ -481,6 +538,7 @@ def create_app(config_name=None):
         
         # Configuraciones específicas
         configure_login_manager(app)
+        configure_csrf_protection(app)
         configure_logging(app)
         
         # Base de datos

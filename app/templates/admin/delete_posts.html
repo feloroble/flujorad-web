@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Publicaciones{% endblock %}
+
+{% block content %}
+<!-- Header profesional con icono -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="titulo-profesional mb-0">
+          <i class="bi bi-trash3-fill me-3"></i>Eliminar Publicaciones
+        </h1>
+        <p class="text-muted fs-5 mt-2">Gestiona y elimina publicaciones del sistema</p>
+      </div>
+      <div class="text-end">
+        <div class="badge bg-gradient fs-6 px-3 py-2" style="background: var(--gradient-blue);">
+          <i class="bi bi-files me-2"></i>{{ publicaciones|length }} publicaciones
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Formulario de filtros mejorado -->
+<div class="card glass-effect mb-4">
+  <div class="card-header" style="background: var(--gradient-blue); color: white; border-radius: 20px 20px 0 0;">
+    <h5 class="card-title mb-0">
+      <i class="bi bi-funnel-fill me-2"></i>Filtros de búsqueda
+    </h5>
+  </div>
+  <div class="card-body">
+    <form method="get" action="{{ url_for('admin.delete_posts_view') }}" class="row g-3">
+      <!-- CSRF Token para formulario GET (opcional pero recomendado) -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      
+      <div class="col-md-5">
+        <label for="titulo" class="form-label fw-bold text-primary">
+          <i class="bi bi-type me-2"></i>Filtrar por título
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-primary text-white">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" 
+                 class="form-control" 
+                 id="titulo"
+                 name="titulo" 
+                 placeholder="Buscar por título..." 
+                 value="{{ filtro_titulo }}"
+                 style="border-radius: 0 15px 15px 0;">
+        </div>
+      </div>
+      
+      <div class="col-md-5">
+        <label for="usuario" class="form-label fw-bold text-primary">
+          <i class="bi bi-person me-2"></i>Filtrar por usuario
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-primary text-white">
+            <i class="bi bi-person-search"></i>
+          </span>
+          <input type="text" 
+                 class="form-control" 
+                 id="usuario"
+                 name="usuario" 
+                 placeholder="Buscar por usuario..." 
+                 value="{{ filtro_usuario }}"
+                 style="border-radius: 0 15px 15px 0;">
+        </div>
+      </div>
+      
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-search me-2"></i>Filtrar
+        </button>
+      </div>
+      
+      {% if filtro_titulo or filtro_usuario %}
+      <div class="col-12">
+        <a href="{{ url_for('admin.delete_posts_view') }}" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-clockwise me-2"></i>Limpiar filtros
+        </a>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- Tabla de publicaciones mejorada -->
+<div class="card glass-effect">
+  <div class="card-header" style="background: var(--gradient-blue); color: white; border-radius: 20px 20px 0 0;">
+    <h5 class="card-title mb-0">
+      <i class="bi bi-table me-2"></i>Lista de Publicaciones
+    </h5>
+  </div>
+  <div class="card-body p-0">
+    {% if publicaciones %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" class="fw-bold text-primary">
+              <i class="bi bi-file-text me-2"></i>Título
+            </th>
+            <th scope="col" class="fw-bold text-primary">
+              <i class="bi bi-person me-2"></i>Usuario
+            </th>
+            <th scope="col" class="fw-bold text-primary">
+              <i class="bi bi-calendar3 me-2"></i>Fecha
+            </th>
+            <th scope="col" class="fw-bold text-primary text-center">
+              <i class="bi bi-gear me-2"></i>Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in publicaciones %}
+          <tr class="align-middle">
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+                  <i class="bi bi-file-earmark-text text-primary"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold">{{ post.titulo[:50] }}{% if post.titulo|length > 50 %}...{% endif %}</h6>
+                  <small class="text-muted">ID: {{ post.id }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3">
+                  <i class="bi bi-person-fill text-success"></i>
+                </div>
+                <div>
+                  <span class="fw-semibold">{{ post.usuario.username }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-info bg-opacity-10 p-2 me-3">
+                  <i class="bi bi-calendar3 text-info"></i>
+                </div>
+                <div>
+                  <span class="fw-semibold">{{ post.fecha_creacion.strftime('%d/%m/%Y') }}</span>
+                  <br>
+                  <small class="text-muted">{{ post.fecha_creacion.strftime('%H:%M') }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="text-center">
+              <form method="post" 
+                    action="{{ url_for('admin.delete_posts_view') }}" 
+                    onsubmit="return confirmarEliminacion('{{ post.titulo }}');" 
+                    style="display:inline;">
+                <!-- CSRF Token corregido para Flask-WTF -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <button type="submit" 
+                        class="btn btn-danger btn-sm rounded-pill px-3"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top" 
+                        title="Eliminar publicación">
+                  <i class="bi bi-trash3-fill me-1"></i>Eliminar
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <!-- Estado vacío mejorado -->
+    <div class="text-center py-5">
+      <div class="mb-4">
+        <i class="bi bi-inbox display-1 text-muted opacity-50"></i>
+      </div>
+      <h4 class="text-muted mb-3">No se encontraron publicaciones</h4>
+      <p class="text-muted">
+        {% if filtro_titulo or filtro_usuario %}
+          No hay publicaciones que coincidan con los filtros aplicados.
+        {% else %}
+          Aún no hay publicaciones en el sistema.
+        {% endif %}
+      </p>
+      {% if filtro_titulo or filtro_usuario %}
+      <a href="{{ url_for('admin.delete_posts_view') }}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-clockwise me-2"></i>Ver todas las publicaciones
+      </a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Paginación mejorada -->
+{% if pagination and pagination.pages > 1 %}
+<div class="d-flex justify-content-center mt-4">
+  <nav aria-label="Navegación de publicaciones">
+    <ul class="pagination pagination-lg">
+      {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link rounded-pill me-2" 
+           href="{{ url_for('admin.delete_posts_view', page=pagination.prev_num, titulo=filtro_titulo, usuario=filtro_usuario) }}"
+           aria-label="Página anterior">
+          <i class="bi bi-chevron-left"></i>
+          <span class="d-none d-sm-inline ms-1">Anterior</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link rounded-pill me-2">
+          <i class="bi bi-chevron-left"></i>
+          <span class="d-none d-sm-inline ms-1">Anterior</span>
+        </span>
+      </li>
+      {% endif %}
+
+      <!-- Páginas -->
+      {% for page_num in pagination.iter_pages() %}
+        {% if page_num %}
+          {% if page_num != pagination.page %}
+          <li class="page-item">
+            <a class="page-link rounded-pill mx-1" 
+               href="{{ url_for('admin.delete_posts_view', page=page_num, titulo=filtro_titulo, usuario=filtro_usuario) }}">
+              {{ page_num }}
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item active">
+            <span class="page-link rounded-pill mx-1" style="background: var(--gradient-blue); border: none;">
+              {{ page_num }}
+            </span>
+          </li>
+          {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link rounded-pill mx-1">…</span>
+        </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link rounded-pill ms-2" 
+           href="{{ url_for('admin.delete_posts_view', page=pagination.next_num, titulo=filtro_titulo, usuario=filtro_usuario) }}"
+           aria-label="Página siguiente">
+          <span class="d-none d-sm-inline me-1">Siguiente</span>
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link rounded-pill ms-2">
+          <span class="d-none d-sm-inline me-1">Siguiente</span>
+          <i class="bi bi-chevron-right"></i>
+        </span>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<!-- Información de paginación -->
+<div class="text-center mt-3">
+  <small class="text-muted">
+    <i class="bi bi-info-circle me-1"></i>
+    Página {{ pagination.page }} de {{ pagination.pages }} 
+    ({{ pagination.total }} publicaciones en total)
+  </small>
+</div>
+{% endif %}
+
+<!-- Script para confirmación mejorada -->
+<script>
+function confirmarEliminacion(titulo) {
+  return confirm(`¿Estás seguro de que deseas eliminar la publicación "${titulo}"?\n\nEsta acción no se puede deshacer.`);
+}
+
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+  
+  // Animación de entrada para las filas de la tabla
+  const tableRows = document.querySelectorAll('tbody tr');
+  tableRows.forEach((row, index) => {
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(-20px)';
+    setTimeout(() => {
+      row.style.transition = 'all 0.3s ease';
+      row.style.opacity = '1';
+      row.style.transform = 'translateX(0)';
+    }, index * 100);
+  });
+});
+
+// Efecto hover para las filas de la tabla
+document.addEventListener('DOMContentLoaded', function() {
+  const tableRows = document.querySelectorAll('tbody tr');
+  tableRows.forEach(row => {
+    row.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateX(5px)';
+      this.style.boxShadow = '0 4px 15px rgba(0, 102, 204, 0.1)';
+    });
+    
+    row.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateX(0)';
+      this.style.boxShadow = 'none';
+    });
+  });
+});
+</script>
+
+<style>
+/* Estilos específicos para esta plantilla */
+.table-hover tbody tr:hover {
+  background-color: var(--soft-blue);
+  transform: translateX(5px);
+  transition: all 0.3s ease;
+}
+
+.page-link {
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  color: white;
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+  background: var(--gradient-blue);
+  border-color: var(--primary-blue);
+}
+
+.input-group-text {
+  border-color: var(--primary-blue);
+}
+
+.form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+}
+
+/* Animación para botones de eliminar */
+.btn-danger {
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+</style>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-from app.utils.activos import MODULOS_ACTIVOS
+from ..utils.activos import MODULOS_ACTIVOS
 
 
 

@@ -1,11 +1,13 @@
 import os
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user,login_required
-from app.extensions import db
-from app.utils.decorators import admin_required
-from .forms import ComentarioForm, PublicacionForm
+from ..extensions import db
+from ..utils.decorators import admin_required
+from ..models.user import User
+from .forms import ComentarioForm, DeletePostForm, PublicacionForm
 from werkzeug.utils import secure_filename
-from app.models.blog  import  Comentario, Publicacion, PublicacionContenido
+from ..models.blog  import  Comentario, Publicacion, PublicacionContenido
+from flask_wtf.csrf import validate_csrf, CSRFError
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -121,3 +123,100 @@ def ver_publicacion(id):
     comentarios = Comentario.query.filter_by(publicacion_id=id).all()
     form = ComentarioForm()
     return render_template('admin/ver.html', publicacion=publicacion , comentarios=comentarios, form=form)
+
+
+@admin_bp.route('/post/delete/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    if current_user.role != 'admin':
+        abort(403)
+
+    try:
+        # ===== VALIDAR TOKEN CSRF =====
+        validate_csrf(request.form.get('csrf_token'))
+        
+        post = Publicacion.query.get_or_404(post_id)
+        
+        # Verificar que el post_id del formulario coincida con la URL
+        form_post_id = request.form.get('post_id', type=int)
+        if form_post_id != post_id:
+            flash('Datos del formulario no válidos.', 'danger')
+            return redirect(url_for('admin.posts_list'))
+        
+        db.session.delete(post)
+        db.session.commit()
+        flash('Publicación eliminada correctamente.', 'success')
+        
+    except CSRFError:
+        flash('Token de seguridad inválido. Intenta nuevamente.', 'danger')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error al eliminar la publicación.', 'danger')
+        # Log del error para debugging
+        current_app.logger.error(f'Error eliminando publicación {post_id}: {str(e)}')
+    
+    return redirect(url_for('admin.posts_list'))
+
+@admin_bp.route('/posts/delete', methods=['GET', 'POST'])
+@login_required
+def delete_posts_view():
+    if current_user.role != 'admin':
+        abort(403)
+
+    # Crear formulario para eliminación
+    delete_form = DeletePostForm()
+
+    # Filtrar
+    filtro_titulo = request.args.get('titulo', '', type=str)
+    filtro_usuario = request.args.get('usuario', '', type=str)
+
+    query = Publicacion.query
+
+    if filtro_titulo:
+        query = query.filter(Publicacion.titulo.ilike(f'%{filtro_titulo}%'))
+    if filtro_usuario:
+        query = query.join(Publicacion.usuario).filter(User.username.ilike(f'%{filtro_usuario}%'))
+
+    # Paginación
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    pagination = query.order_by(Publicacion.fecha_creacion.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    publicaciones = pagination.items
+
+    if request.method == 'POST':
+        # ===== VALIDAR FORMULARIO CON CSRF =====
+        if delete_form.validate_on_submit():
+            post_id = delete_form.post_id.data
+            post = Publicacion.query.get_or_404(post_id)
+            
+            try:
+                comentarios = Comentario.query.filter_by(publicacion_id=post_id).all()
+                for comentario in comentarios:
+                  db.session.delete(comentario)
+                db.session.delete(post)
+                db.session.commit()
+                flash('Publicación eliminada correctamente.', 'success')
+                
+            except Exception as e:
+                db.session.rollback()
+                flash('Error al eliminar la publicación.', 'danger')
+                current_app.logger.error(f'Error eliminando publicación {post_id}: {str(e)}')
+            
+            # Redirigir manteniendo los filtros
+            return redirect(url_for('admin.delete_posts_view', 
+                                  titulo=filtro_titulo, 
+                                  usuario=filtro_usuario, 
+                                  page=page))
+        else:
+            # Manejar errores de validación (incluyendo CSRF)
+            if delete_form.errors:
+                flash('Token de seguridad inválido. Intenta nuevamente.', 'danger')
+
+    return render_template('admin/delete_posts.html', 
+                         publicaciones=publicaciones, 
+                         pagination=pagination,
+                         filtro_titulo=filtro_titulo, 
+                         filtro_usuario=filtro_usuario,
+                         delete_form=delete_form)

@@ -117,7 +117,149 @@
       .social-link.twitter:hover { background-color: #1da1f2; }
       .social-link.linkedin:hover { background-color: #0077b5; }
 
-      /* Alertas mejoradas */
+      /* NUEVOS ESTILOS PARA NOTIFICACIONES TOAST FLOTANTES */
+      .toast-container {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 9999;
+        pointer-events: none;
+      }
+
+      .toast-notification {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        margin-bottom: 15px;
+        min-width: 350px;
+        max-width: 400px;
+        border: none;
+        pointer-events: auto;
+        transform: translateX(400px);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      .toast-notification.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .toast-notification.hide {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+
+      /* Estilos específicos por tipo */
+      .toast-success {
+        border-left: 5px solid #198754;
+        background: linear-gradient(135deg, rgba(209, 242, 235, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+      }
+
+      .toast-info {
+        border-left: 5px solid var(--primary-blue);
+        background: linear-gradient(135deg, rgba(230, 242, 255, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+      }
+
+      .toast-warning {
+        border-left: 5px solid #ffc107;
+        background: linear-gradient(135deg, rgba(255, 243, 205, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+      }
+
+      .toast-danger {
+        border-left: 5px solid #dc3545;
+        background: linear-gradient(135deg, rgba(248, 215, 218, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+      }
+
+      .toast-header {
+        background: transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 12px 15px;
+      }
+
+      .toast-icon {
+        font-size: 1.4rem;
+        margin-right: 10px;
+      }
+
+      .toast-success .toast-icon { color: #198754; }
+      .toast-info .toast-icon { color: var(--primary-blue); }
+      .toast-warning .toast-icon { color: #ffc107; }
+      .toast-danger .toast-icon { color: #dc3545; }
+
+      .toast-title {
+        font-weight: 600;
+        margin: 0;
+        font-size: 0.95rem;
+        color: #2c3e50;
+      }
+
+      .toast-body {
+        padding: 12px 15px;
+        color: #495057;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .toast-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #6c757d;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        margin-left: auto;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .toast-close:hover {
+        color: #dc3545;
+      }
+
+      .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        border-radius: 0 0 15px 0;
+        transition: width 0.1s ease;
+      }
+
+      .toast-success .toast-progress { background: #198754; }
+      .toast-info .toast-progress { background: var(--primary-blue); }
+      .toast-warning .toast-progress { background: #ffc107; }
+      .toast-danger .toast-progress { background: #dc3545; }
+
+      /* Responsive para móviles */
+      @media (max-width: 768px) {
+        .toast-container {
+          right: 10px;
+          left: 10px;
+          top: 80px;
+        }
+        
+        .toast-notification {
+          min-width: auto;
+          max-width: 100%;
+          transform: translateY(-100px);
+        }
+        
+        .toast-notification.show {
+          transform: translateY(0);
+        }
+        
+        .toast-notification.hide {
+          transform: translateY(-100px);
+        }
+      }
+
+      /* Alertas mejoradas (mantenemos para compatibilidad) */
       .alert {
         border: none;
         border-radius: 15px;
@@ -336,18 +478,34 @@
       </div>
     </nav>
 
+    <!-- CONTENEDOR PARA LAS NOTIFICACIONES TOAST FLOTANTES -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <div class="container mt-4">
+      <!-- PROCESAMIENTO DE MENSAJES FLASH PARA CONVERTIR A TOAST -->
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-          {% for category, message in messages %}
-            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-              <i class="bi bi-{{ 'exclamation-triangle' if category == 'warning' else 'info-circle' if category == 'info' else 'check-circle' if category == 'success' else 'exclamation-octagon' }} me-2"></i>
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endfor %}
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const messages = [
+                {% for category, message in messages %}
+                {
+                  type: '{{ 'danger' if category == 'error' else category }}',
+                  message: '{{ message|e }}'
+                },
+                {% endfor %}
+              ];
+              
+              messages.forEach((msg, index) => {
+                setTimeout(() => {
+                  showToast(msg.type, msg.message);
+                }, index * 300);
+              });
+            });
+          </script>
         {% endif %}
       {% endwith %}
+      
       {% block content %}{% endblock %}
     </div>
 
@@ -382,7 +540,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Script para efectos adicionales -->
+    <!-- Script para efectos adicionales y NOTIFICACIONES TOAST -->
     <script>
       // Efecto de parallax suave en el navbar
       window.addEventListener('scroll', function() {
@@ -396,20 +554,6 @@
         }
       });
 
-      // Animación de entrada para las alertas
-      document.addEventListener('DOMContentLoaded', function() {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach((alert, index) => {
-          alert.style.opacity = '0';
-          alert.style.transform = 'translateY(-20px)';
-          setTimeout(() => {
-            alert.style.transition = 'all 0.5s ease';
-            alert.style.opacity = '1';
-            alert.style.transform = 'translateY(0)';
-          }, index * 200);
-        });
-      });
-
       // Efecto hover para los enlaces de redes sociales
       document.querySelectorAll('.social-link').forEach(link => {
         link.addEventListener('mouseenter', function() {
@@ -420,6 +564,90 @@
           this.style.transform = 'translateY(0) scale(1) rotate(0deg)';
         });
       });
+
+      // FUNCIÓN PRINCIPAL PARA MOSTRAR NOTIFICACIONES TOAST
+      function showToast(type, message) {
+        const container = document.getElementById('toastContainer');
+        
+        // Configuración de iconos y títulos por tipo
+        const toastConfig = {
+          success: { icon: 'bi-check-circle-fill', title: '¡Éxito!' },
+          info: { icon: 'bi-info-circle-fill', title: 'Información' },
+          warning: { icon: 'bi-exclamation-triangle-fill', title: '¡Atención!' },
+          danger: { icon: 'bi-exclamation-octagon-fill', title: '¡Error!' }
+        };
+
+        const config = toastConfig[type] || toastConfig.info;
+        
+        // Crear el HTML del toast
+        const toastHtml = `
+          <div class="toast-notification toast-${type}">
+            <div class="toast-header">
+              <i class="bi ${config.icon} toast-icon"></i>
+              <strong class="toast-title">${config.title}</strong>
+              <button type="button" class="toast-close" onclick="closeToast(this.parentElement.parentElement)">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+            <div class="toast-body">${message}</div>
+            <div class="toast-progress" style="width: 100%;"></div>
+          </div>
+        `;
+        
+        // Agregar el toast al contenedor
+        container.insertAdjacentHTML('beforeend', toastHtml);
+        
+        // Obtener el toast recién creado
+        const toast = container.lastElementChild;
+        const progressBar = toast.querySelector('.toast-progress');
+        
+        // Mostrar el toast con animación
+        setTimeout(() => {
+          toast.classList.add('show');
+        }, 100);
+        
+        // Iniciar barra de progreso (10 segundos)
+        let width = 100;
+        const interval = setInterval(() => {
+          width -= 1;
+          progressBar.style.width = width + '%';
+          
+          if (width <= 0) {
+            clearInterval(interval);
+            closeToast(toast);
+          }
+        }, 100); // 10 segundos / 100 = 100ms por paso
+        
+        // Pausar progreso al hacer hover
+        toast.addEventListener('mouseenter', () => clearInterval(interval));
+        
+        // Reanudar progreso al salir del hover
+        toast.addEventListener('mouseleave', () => {
+          const newInterval = setInterval(() => {
+            width -= 1;
+            progressBar.style.width = width + '%';
+            
+            if (width <= 0) {
+              clearInterval(newInterval);
+              closeToast(toast);
+            }
+          }, 100);
+        });
+      }
+      
+      // Función para cerrar un toast
+      function closeToast(toast) {
+        toast.classList.add('hide');
+        setTimeout(() => {
+          if (toast && toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 500);
+      }
+      
+      // Función global para mostrar toasts desde JavaScript
+      // Uso: showToastNotification('success', 'Operación completada correctamente');
+      window.showToastNotification = showToast;
     </script>
   </body>
 </html>

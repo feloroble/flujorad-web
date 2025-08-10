@@ -3,81 +3,990 @@
 {% block title %}Panel de Administrador {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
 
-  <h2 class="text-primary mb-4">Panel de Administración</h2>
+<style>
+  /* Estilos específicos para el panel de administrador */
+  .admin-hero {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 3rem 0 2rem;
+    margin: -2rem -15px 3rem -15px;
+    border-radius: 0 0 50px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagons" width="30" height="25.98" patternUnits="userSpaceOnUse"><polygon points="15,2 26,9.5 26,24.5 15,32 4,24.5 4,9.5" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagons)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .admin-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .admin-title {
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+    letter-spacing: 1px;
+  }
+
+  .admin-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  .admin-welcome {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  /* Cards de sección */
+  .admin-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .admin-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 12px 45px rgba(0, 102, 204, 0.12);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    position: relative;
+  }
+
+  .admin-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.2);
+  }
+
+  .admin-card-header {
+    background: var(--gradient-blue);
+    color: white;
+    padding: 1.5rem 2rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .admin-card-header h5 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.4rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .admin-card-body {
+    padding: 2rem;
+    position: relative;
+  }
+
+  /* Cards específicas por tipo */
+  .info-card {
+    border-left: 5px solid var(--primary-blue);
+  }
+
+  .users-card {
+    border-left: 5px solid var(--secondary-blue);
+  }
+
+  .blog-card {
+    border-left: 5px solid var(--light-blue);
+  }
+
+  .comments-card {
+    border-left: 5px solid var(--accent-blue);
+  }
+
+  .config-card {
+    border-left: 5px solid #ffc107;
+  }
+
+  /* Información del administrador */
+  .admin-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .info-item {
+    background: var(--soft-blue);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 102, 204, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.15);
+    background: rgba(230, 242, 255, 0.9);
+  }
+
+  .info-item-icon {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .info-item-label {
+    font-weight: 600;
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-item-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-blue);
+    margin: 0;
+  }
+
+  /* Botones de acción modernos */
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: flex-start;
+  }
+
+  .admin-btn {
+    background: var(--gradient-blue);
+    border: none;
+    color: white;
+    padding: 1rem 1.8rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-transform: none;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .admin-btn:hover::before {
+    left: 100%;
+  }
+
+  .admin-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .admin-btn-secondary {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--secondary-blue) 100%);
+  }
+
+  .admin-btn-info {
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--primary-blue) 100%);
+  }
+
+  .admin-btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  }
+
+  .admin-btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: #000 !important;
+  }
+
+  /* Botones principales de configuración */
+  .main-actions {
+    background: linear-gradient(135deg, var(--soft-blue) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border-radius: 25px;
+    padding: 2.5rem;
+    text-align: center;
+    border: 1px solid rgba(0, 102, 204, 0.2);
+    margin-top: 2rem;
+  }
+
+  .main-actions h4 {
+    color: var(--text-blue);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .main-actions-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .main-action-btn {
+    background: var(--gradient-blue);
+    border: none;
+    color: white;
+    padding: 1.5rem 3rem;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-action-btn i {
+    font-size: 2.5rem;
+  }
+
+  .main-action-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 102, 204, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .main-action-btn-secondary {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--secondary-blue) 100%);
+  }
+
+  /* Estadísticas del dashboard */
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 102, 204, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-blue);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
+  }
+
+  .stat-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-blue);
+    margin: 0;
+  }
+
+  .stat-label {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+  }
+
+  /* Quick actions */
+  .quick-actions {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 102, 204, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    margin-bottom: 2rem;
+  }
+
+  .quick-actions-title {
+    color: var(--text-blue);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .quick-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .quick-action-item {
+    background: linear-gradient(135deg, var(--soft-blue) 0%, rgba(255, 255, 255, 0.8) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quick-action-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .quick-action-item:hover::before {
+    left: 100%;
+  }
+
+  .quick-action-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(135deg, rgba(230, 242, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+  }
+
+  .quick-action-icon {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .quick-action-item:hover .quick-action-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .quick-action-title {
+    font-weight: 600;
+    color: var(--text-blue);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .quick-action-desc {
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Animaciones */
+  .admin-section {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+
+  .admin-section:nth-child(1) { animation-delay: 0.1s; }
+  .admin-section:nth-child(2) { animation-delay: 0.2s; }
+  .admin-section:nth-child(3) { animation-delay: 0.3s; }
+  .admin-section:nth-child(4) { animation-delay: 0.4s; }
+  .admin-section:nth-child(5) { animation-delay: 0.5s; }
+  .admin-section:nth-child(6) { animation-delay: 0.6s; }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .admin-hero {
+      padding: 2rem 0 1.5rem;
+      margin: -1rem -15px 2rem -15px;
+    }
+    
+    .admin-title {
+      font-size: 2.2rem;
+    }
+    
+    .admin-card-body,
+    .quick-actions {
+      padding: 1.5rem;
+    }
+    
+    .main-actions-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .main-action-btn {
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .action-buttons {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .admin-title {
+      font-size: 1.8rem;
+    }
+    
+    .dashboard-stats {
+      grid-template-columns: 1fr;
+    }
+    
+    .quick-action-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<!-- Hero del panel de administración -->
+<div class="admin-hero">
+  <div class="container">
+    <div class="admin-hero-content">
+      <h1 class="admin-title">
+        <i class="bi bi-shield-check me-3"></i>
+        Panel de Administración
+      </h1>
+      <p class="admin-subtitle">
+        Centro de control y gestión de Tecno T@ctil
+      </p>
+      <div class="admin-welcome">
+        <i class="bi bi-person-gear me-2"></i>
+        Bienvenido, {{ current_user.name }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Dashboard de estadísticas -->
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <h3 class="stat-number">150</h3>
+      <p class="stat-label">Usuarios Activos</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-journal-text"></i>
+      </div>
+      <h3 class="stat-number">25</h3>
+      <p class="stat-label">Publicaciones</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-chat-dots"></i>
+      </div>
+      <h3 class="stat-number">89</h3>
+      <p class="stat-label">Comentarios</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-graph-up"></i>
+      </div>
+      <h3 class="stat-number">+15%</h3>
+      <p class="stat-label">Crecimiento</p>
+    </div>
+  </div>
 
   <!-- SECCIÓN: Información del Administrador -->
-  <section class="mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Mi Información</h5>
+  <section class="admin-section">
+    <div class="admin-card info-card">
+      <div class="admin-card-header">
+        <h5>
+          <i class="bi bi-person-badge"></i>
+          Mi Información
+        </h5>
       </div>
-      <div class="card-body">
-        <p><strong>Nombre:</strong> {{ current_user.name }}</p>
-        <p><strong>Email:</strong> {{ current_user.email }}</p>
-        <p><strong>Rol:</strong> {{ current_user.role }}</p>
+      <div class="admin-card-body">
+        <div class="admin-info-grid">
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="bi bi-person-circle"></i>
+            </div>
+            <div class="info-item-label">Nombre</div>
+            <div class="info-item-value">{{ current_user.name }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="bi bi-envelope"></i>
+            </div>
+            <div class="info-item-label">Email</div>
+            <div class="info-item-value">{{ current_user.email }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <div class="info-item-label">Rol</div>
+            <div class="info-item-value">{{ current_user.role|title }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- SECCIÓN: Gestión de Usuarios -->
-  <section class="mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-secondary text-white">
-        <h5 class="mb-0">Gestión de Usuarios</h5>
+  <section class="admin-section">
+    <div class="admin-card users-card">
+      <div class="admin-card-header">
+        <h5>
+          <i class="bi bi-people-fill"></i>
+          Gestión de Usuarios
+        </h5>
       </div>
-      <div class="card-body">
-        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary">Cambiar roles de usuarios</a>
+      <div class="admin-card-body">
+        <p style="color: var(--accent-blue); margin-bottom: 1.5rem;">
+          Administra roles y permisos de los usuarios registrados
+        </p>
+        <div class="action-buttons">
+          <a href="{{ url_for('admin.manage_users') }}" class="admin-btn admin-btn-secondary">
+            <i class="bi bi-person-gear"></i>
+            <span>Gestionar Roles</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- SECCIÓN: Blog -->
-  <section class="mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-info text-white">
-        <h5 class="mb-0">Publicaciones del Blog</h5>
+  <section class="admin-section">
+    <div class="admin-card blog-card">
+      <div class="admin-card-header">
+        <h5>
+          <i class="bi bi-journal-bookmark"></i>
+          Publicaciones del Blog
+        </h5>
       </div>
-      <div class="card-body">
-        <a href="{{ url_for('admin.create_post') }}" class="btn btn-outline-info">Crear nueva publicación</a>
-        <a href="{{ url_for('admin.blog') }}" class="btn btn-outline-info">Ver todas las publicaciones</a>
+      <div class="admin-card-body">
+        <p style="color: var(--accent-blue); margin-bottom: 1.5rem;">
+          Crea, edita y gestiona todo el contenido del blog
+        </p>
+        <div class="action-buttons">
+          <a href="{{ url_for('admin.create_post') }}" class="admin-btn admin-btn-info">
+            <i class="bi bi-plus-circle"></i>
+            <span>Nueva Publicación</span>
+          </a>
+          <a href="{{ url_for('admin.blog') }}" class="admin-btn admin-btn-info">
+            <i class="bi bi-collection"></i>
+            <span>Ver Publicaciones</span>
+          </a>
+          <a href="{{ url_for('admin.delete_posts_view') }}" class="admin-btn admin-btn-danger">
+            <i class="bi bi-trash"></i>
+            <span>Eliminar Posts</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- SECCIÓN: Comentarios -->
-  <section class="mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-dark text-white">
-        <h5 class="mb-0">Comentarios de Usuarios</h5>
+  <section class="admin-section">
+    <div class="admin-card comments-card">
+      <div class="admin-card-header">
+        <h5>
+          <i class="bi bi-chat-left-text"></i>
+          Comentarios de Usuarios
+        </h5>
       </div>
-      <div class="card-body">
-        <a href="" class="btn btn-outline-dark">Ver comentarios</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECCIÓN: Otras Configuraciones -->
-  <section class="mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-warning">
-        <h5 class="mb-0">Configuraciones adicionales</h5>
-      </div>
-      <div class="card-body">
-        <div class="d-flex gap-3 justify-content-center my-5">
-          <a href="#" class="btn btn-primary btn-lg">
-            Crear Modelo
-          </a>
-          <a href="#" class="btn btn-secondary btn-lg">
-            Crear Norma
+      <div class="admin-card-body">
+        <p style="color: var(--accent-blue); margin-bottom: 1.5rem;">
+          Modera y gestiona los comentarios en las publicaciones
+        </p>
+        <div class="action-buttons">
+          <a href="#" class="admin-btn">
+            <i class="bi bi-eye"></i>
+            <span>Ver Comentarios</span>
           </a>
         </div>
-  
-  
       </div>
     </div>
   </section>
 
+  <!-- SECCIÓN: Configuraciones Adicionales -->
+  <section class="admin-section">
+    <div class="admin-card config-card">
+      <div class="admin-card-header" style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #000;">
+        <h5>
+          <i class="bi bi-gear-fill"></i>
+          Configuraciones Adicionales
+        </h5>
+      </div>
+      <div class="admin-card-body">
+        <p style="color: var(--accent-blue); margin-bottom: 1.5rem;">
+          Herramientas avanzadas para la gestión del sistema
+        </p>
+        <div class="main-actions">
+          <h4>
+            <i class="bi bi-tools"></i>
+            Acciones Principales
+          </h4>
+          <div class="main-actions-buttons">
+            <a href="#" class="main-action-btn">
+              <i class="bi bi-diagram-3"></i>
+              <span>Crear Modelo</span>
+            </a>
+            <a href="#" class="main-action-btn main-action-btn-secondary">
+              <i class="bi bi-file-earmark-ruled"></i>
+              <span>Crear Norma</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Acciones rápidas adicionales -->
+  <div class="quick-actions">
+    <h3 class="quick-actions-title">
+      <i class="bi bi-lightning-charge"></i>
+      Acciones Rápidas
+    </h3>
+    <div class="quick-action-grid">
+      <a href="{{ url_for('admin.create_post') }}" class="quick-action-item">
+        <div class="quick-action-icon">
+          <i class="bi bi-pencil-square"></i>
+        </div>
+        <div class="quick-action-title">Escribir Post</div>
+        <div class="quick-action-desc">Crear nueva publicación</div>
+      </a>
+      <a href="{{ url_for('admin.manage_users') }}" class="quick-action-item">
+        <div class="quick-action-icon">
+          <i class="bi bi-person-lines-fill"></i>
+        </div>
+        <div class="quick-action-title">Usuarios</div>
+        <div class="quick-action-desc">Gestionar usuarios</div>
+      </a>
+      <a href="{{ url_for('admin.blog') }}" class="quick-action-item">
+        <div class="quick-action-icon">
+          <i class="bi bi-journal-check"></i>
+        </div>
+        <div class="quick-action-title">Revisar Blog</div>
+        <div class="quick-action-desc">Ver todas las publicaciones</div>
+      </a>
+      <a href="#" class="quick-action-item">
+        <div class="quick-action-icon">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div class="quick-action-title">Estadísticas</div>
+        <div class="quick-action-desc">Ver métricas detalladas</div>
+      </a>
+    </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Animación del hero
+    const hero = document.querySelector('.admin-hero');
+    if (hero) {
+      hero.style.opacity = '0';
+      hero.style.transform = 'translateY(-50px)';
+      
+      setTimeout(() => {
+        hero.style.transition = 'all 1s cubic-bezier(0.4, 0, 0.2, 1)';
+        hero.style.opacity = '1';
+        hero.style.transform = 'translateY(0)';
+      }, 100);
+    }
+
+    // Animación de las estadísticas
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px) scale(0.9)';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0) scale(1)';
+      }, 400 + (index * 100));
+    });
+
+    // Animación contador numérico
+    const numbers = document.querySelectorAll('.stat-number');
+    numbers.forEach(number => {
+      const finalValue = number.textContent;
+      const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+      
+      if (!isNaN(numericValue)) {
+        let currentValue = 0;
+        const increment = numericValue / 30;
+        const timer = setInterval(() => {
+          currentValue += increment;
+          if (currentValue >= numericValue) {
+            number.textContent = finalValue;
+            clearInterval(timer);
+          } else {
+            number.textContent = Math.floor(currentValue);
+          }
+        }, 50);
+      }
+    });
+
+    // Efecto de pulso en botones principales
+    document.querySelectorAll('.main-action-btn').forEach(btn => {
+      btn.addEventListener('mouseenter', function() {
+        this.style.animation = 'pulse 1s infinite';
+      });
+      
+      btn.addEventListener('mouseleave', function() {
+        this.style.animation = 'none';
+      });
+    });
+
+    // Efecto de onda en cards
+    document.querySelectorAll('.admin-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        const wave = document.createElement('div');
+        wave.style.position = 'absolute';
+        wave.style.top = '0';
+        wave.style.left = '0';
+        wave.style.width = '100%';
+        wave.style.height = '100%';
+        wave.style.background = 'radial-gradient(circle at center, rgba(0, 102, 204, 0.1) 0%, transparent 70%)';
+        wave.style.pointerEvents = 'none';
+        wave.style.animation = 'wave 1s ease-out';
+        
+        this.style.position = 'relative';
+        this.appendChild(wave);
+        
+        setTimeout(() => {
+          wave.remove();
+        }, 1000);
+      });
+    });
+
+    // Efecto de escritura en el welcome
+    const welcomeText = document.querySelector('.admin-welcome');
+    if (welcomeText) {
+      setTimeout(() => {
+        welcomeText.style.animation = 'glow 2s ease-in-out infinite alternate';
+      }, 2000);
+    }
+
+    // Hover effect para quick actions
+    document.querySelectorAll('.quick-action-item').forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        const icon = this.querySelector('.quick-action-icon');
+        icon.style.color = 'var(--secondary-blue)';
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        const icon = this.querySelector('.quick-action-icon');
+        icon.style.color = 'var(--primary-blue)';
+      });
+    });
+
+    // Efecto de loading en botones
+    document.querySelectorAll('.admin-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        // Solo para demo, puedes quitar esto en producción
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="bi bi-arrow-clockwise spin me-2"></i>Cargando...';
+        this.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+          this.innerHTML = originalText;
+          this.style.pointerEvents = 'auto';
+        }, 1500);
+      });
+    });
+  });
+
+  // CSS adicional para animaciones
+  const extraStyles = document.createElement('style');
+  extraStyles.textContent = `
+    @keyframes pulse {
+      0% { transform: translateY(-5px) scale(1.05); }
+      50% { transform: translateY(-7px) scale(1.08); }
+      100% { transform: translateY(-5px) scale(1.05); }
+    }
+    
+    @keyframes wave {
+      0% { 
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      50% { 
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      100% { 
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+    
+    @keyframes glow {
+      0% { 
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+      100% { 
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+      }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Efecto de typing en el welcome */
+    .admin-welcome {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .admin-welcome::after {
+      content: '';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 60%;
+      background: white;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    /* Efecto de glassmorphism mejorado */
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .admin-card:hover::before {
+      opacity: 1;
+    }
+    
+    /* Mejoras adicionales de accesibilidad */
+    .admin-btn:focus,
+    .quick-action-item:focus {
+      outline: 3px solid var(--light-blue);
+      outline-offset: 2px;
+    }
+    
+    /* Efecto de partículas en el hero */
+    .admin-hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent);
+      background-repeat: repeat;
+      background-size: 150px 100px;
+      animation: floating 20s linear infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes floating {
+      0% { transform: translateX(0px) translateY(0px); }
+      33% { transform: translateX(30px) translateY(-30px); }
+      66% { transform: translateX(-20px) translateY(20px); }
+      100% { transform: translateX(0px) translateY(0px); }
+    }
+  `;
+  document.head.appendChild(extraStyles);
+</script>
+
 {% endblock %}
